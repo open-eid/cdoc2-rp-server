@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  contact:
+    url: http://ria.ee
+  title: cdoc2-rp-server
+  version: 1.0.1
+  description: |
+    API for RP mediation process and session creation for MID/SID CDOC
+
+servers:
+  - url: 'https://localhost:8443'
+    description: Regular TLS (no mutual TLS required).
+
+paths:
+  '/session_nonce':
+    get:
+      summary: Generates session nonce
+      description: |
+        Returns a randomly generated nonce value and stores this value in the database for 24 hours
+      tags:
+        - cdoc2-rp
+      operationId: getSessionNonce
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceResponse'
+        '400':
+          description: 'Bad request. Client error.'
+        '403':
+          description: 'Authentication failed'
+
+  '/.well-known/jwks.jws':
+    get:
+      summary: Returns information about signing keys
+      description: Returns information about signing keys
+      tags:
+        - cdoc2-rp
+      operationId: getWellKnown
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WellKnownResponse'
+        '400':
+          description: 'Bad request. Client error.'
+        '403':
+          description: 'Authentication failed'
+
+components:
+  schemas:
+    NonceResponse:
+      title: Nonce response
+      type: object
+      properties:
+        nonce:
+          type: string
+          minLength: 12
+          maxLength: 16
+          description: 'server nonce for subsequent authentication'
+      required:
+        - nonce
+
+    WellKnownResponse:
+      title: well-known response
+      type: object
+      required:
+        - keys
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            required:
+              - kid
+              - kty
+            properties:
+              kid:
+                description: 'key identifier'
+                example: '1'
+                type: string
+              kty:
+                type: string
+                description: 'identifies the cryptographic algorithm family used with the key'
+                example: 'EC'
+              use:
+                type: string
+                description: 'identifies the intended use of the public key'
+                example: 'enc'
+                nullable: true
+              crv:
+                type: string
+                description: ''
+                example: 'P-256'
+                nullable: true
+              x:
+                type: string
+                description: 'base64 encoded x curve coordinate'
+                example: ''
+                nullable: true
+              y:
+                type: string
+                description: 'base64 encoded y curve coordinate'
+                example: ''
+                nullable: true
+              n:
+                type: string
+                description: 'base64 encoded public modulus'
+                example: ''
+                nullable: true
+              e:
+                type: string
+                description: 'base64 encoded public exponent'
+                example: ''
+                nullable: true
+              alg:
+                type: string
+                description: 'identifies the algorithm intended for use with the key'
+                example: 'RS256'
+                nullable: true
+
+  securitySchemes:
+    bearerAuth: # long-term token
+      type: http
+      scheme: bearer
+    basicAuth: # temporary solution
+      type: http
+      scheme: basic
+
+tags:
+  - name: cdoc2-rp
