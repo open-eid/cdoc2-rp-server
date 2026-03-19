@@ -5,7 +5,7 @@ info:
   title: cdoc2-rp-server
   version: 1.0.1
   description: |
-    API for the session creation process for MID/SID CDOC
+    API for RP mediation process and session creation for MID/SID CDOC
 
 servers:
   - url: 'https://localhost:8443'
