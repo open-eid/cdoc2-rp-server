@@ -13,7 +13,7 @@ servers:
 
 paths:
   '/session_nonce':
-    get:
+    post:
       summary: Generates session nonce
       description: |
         Returns a randomly generated nonce value and stores this value in the database for 24 hours

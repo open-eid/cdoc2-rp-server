@@ -32,7 +32,7 @@ class Cdoc2RpServerApplicationTest {
     @Test
     void shouldGetSessionNonce() throws Exception {
         MockHttpServletResponse getSessionNonceResponse = mockMvc.perform(
-                get(URI.create("/session_nonce"))
+                post(URI.create("/session_nonce"))
             ).andExpect(status().isOk())
             .andReturn().getResponse();
 
