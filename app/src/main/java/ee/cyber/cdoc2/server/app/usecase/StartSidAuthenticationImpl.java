@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.stereotype.Component;
 
-import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 
 @NullMarked
 @RequiredArgsConstructor
@@ -15,7 +14,7 @@ import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 public class StartSidAuthenticationImpl implements StartSidAuthentication {
 
     @Override
-    public UUID execute(SidAuthenticateRequest sidAuthenticateRequest) {
+    public UUID execute() {
         return UUID.randomUUID();
     }
 }

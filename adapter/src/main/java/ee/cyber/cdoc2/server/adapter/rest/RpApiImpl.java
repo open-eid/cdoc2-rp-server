@@ -45,7 +45,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
 
     @Override
     public ResponseEntity<SessionIDResponse> sidAuthenticate(SidAuthenticateRequest sidAuthenticateRequest) {
-        var sessionId = startSidAuthentication.execute(sidAuthenticateRequest);
+        var sessionId = startSidAuthentication.execute();
 
         return ResponseEntity.ok(new SessionIDResponse(sessionId));
     }
