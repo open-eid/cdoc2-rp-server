@@ -35,6 +35,13 @@
                     type="BINARY(16)">
                 <constraints nullable="false"/>
             </column>
+            <column
+                    name="CREATED_AT"
+                    remarks="Timestamp when the session nonce was created"
+                    type="TIMESTAMP"
+                    defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <rollback>

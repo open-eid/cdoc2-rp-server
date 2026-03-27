@@ -26,7 +26,7 @@ public class GetSessionNonceImpl implements GetSessionNonce {
     }
 
     private static String encodeSessionNonce(byte[] nonce) {
-        return Base64.getEncoder().encodeToString(nonce);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(nonce);
     }
 
     private static byte[] generateSessionNonce() {

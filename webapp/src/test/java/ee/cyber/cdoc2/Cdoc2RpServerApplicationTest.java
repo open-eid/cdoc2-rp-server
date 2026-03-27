@@ -56,10 +56,13 @@ class Cdoc2RpServerApplicationTest {
         assertNotNull(getSessionNonceResponseBody.nonce);
         assertTrue(getSessionNonceResponseBody.nonce.length() >= EXPECTED_SESSION_NONCE_BYTES);
 
-        byte[] decodedNonce = Base64.getDecoder().decode(getSessionNonceResponseBody.nonce);
+        byte[] decodedNonce = Base64.getUrlDecoder().decode(getSessionNonceResponseBody.nonce);
 
         assertEquals(EXPECTED_SESSION_NONCE_BYTES, decodedNonce.length);
-        assertTrue(sessionNonceJpaRepository.existsBySessionNonce(decodedNonce));
+
+        var nonceFromDb = sessionNonceJpaRepository.findBySessionNonce(decodedNonce);
+        assertTrue(nonceFromDb.isPresent());
+        assertArrayEquals(decodedNonce, nonceFromDb.get().getSessionNonce());
     }
 
     @Test
