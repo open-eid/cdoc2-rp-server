@@ -18,7 +18,7 @@ public class GetSessionNonceImpl implements GetSessionNonce {
 
     @Override
     public String execute() {
-        var sessionNonce = generateDummyNonce();
+        var sessionNonce = generateSessionNonce();
 
         storeSessionNonce.execute(sessionNonce);
 
@@ -29,7 +29,7 @@ public class GetSessionNonceImpl implements GetSessionNonce {
         return Base64.getEncoder().encodeToString(nonce);
     }
 
-    private static byte[] generateDummyNonce() {
+    private static byte[] generateSessionNonce() {
         byte[] nonce = new byte[SESSION_NONCE_BYTES];
         SecureRandom random = new SecureRandom();
         random.nextBytes(nonce);
