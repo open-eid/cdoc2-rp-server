@@ -5,7 +5,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet author="auth" id="create_table__session_nonce.0000" dbms="h2">
+    <changeSet author="cdoc2-rp" id="create_table__session_nonce.0000" dbms="h2">
         <createSequence cacheSize="20"
                         cycle="false"
                         incrementBy="1"
@@ -13,7 +13,7 @@
                         sequenceName="SESSION_NONCE_PK_SEQUENCE"
                         startValue="1"/>
     </changeSet>
-    <changeSet author="auth" id="create_table__session_nonce.0000" dbms="postgresql">
+    <changeSet author="cdoc2-rp" id="create_table__session_nonce.0000" dbms="postgresql">
         <createSequence cacheSize="20"
                         cycle="false"
                         incrementBy="1"
@@ -23,7 +23,7 @@
                         startValue="1"/>
     </changeSet>
 
-    <changeSet author="auth" id="create_table__session_nonce.0001">
+    <changeSet author="cdoc2-rp" id="create_table__session_nonce.0001">
 
         <createTable tableName="SESSION_NONCE">
             <column name="ID" type="BIGINT" autoIncrement="true">
@@ -48,4 +48,18 @@
             <dropTable tableName="SESSION_NONCE"/>
         </rollback>
     </changeSet>
+
+    <changeSet author="cdoc2-rp" id="create_table__session_nonce.0002">
+
+        <createIndex indexName="IDX_SESSION_NONCE_NONCE"
+                     tableName="SESSION_NONCE"
+                     unique="true">
+            <column name="NONCE"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex indexName="IDX_SESSION_NONCE_NONCE" tableName="SESSION_NONCE"/>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>
