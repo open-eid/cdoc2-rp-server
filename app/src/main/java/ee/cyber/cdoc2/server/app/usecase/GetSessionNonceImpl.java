@@ -18,18 +18,18 @@ public class GetSessionNonceImpl implements GetSessionNonce {
 
     @Override
     public String execute() {
-        String sessionNonce = generateSessionNonce();
+        var sessionNonce = generateSessionNonce();
 
         storeSessionNonce.execute(sessionNonce);
 
-        return sessionNonce;
+        return encodeSessionNonce(sessionNonce);
     }
 
-    private static String generateSessionNonce() {
-        return Base64.getEncoder().encodeToString(generateDummyNonce());
+    private static String encodeSessionNonce(byte[] nonce) {
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(nonce);
     }
 
-    private static byte[] generateDummyNonce() {
+    private static byte[] generateSessionNonce() {
         byte[] nonce = new byte[SESSION_NONCE_BYTES];
         SecureRandom random = new SecureRandom();
         random.nextBytes(nonce);

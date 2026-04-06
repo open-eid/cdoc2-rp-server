@@ -5,5 +5,5 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public interface StoreSessionNonce {
 
-    void execute(String nonce);
+    void execute(byte[] nonce);
 }

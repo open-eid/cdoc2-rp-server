@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import ee.cyber.cdoc2.server.adapter.db.jpa.SessionNonceJpaRepository;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionIDResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponse;
 
@@ -31,6 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class Cdoc2RpServerApplicationTest {
+    @Autowired
+    private SessionNonceJpaRepository sessionNonceJpaRepository;
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final int EXPECTED_SESSION_NONCE_BYTES = 16;
 
@@ -52,9 +56,13 @@ class Cdoc2RpServerApplicationTest {
         assertNotNull(getSessionNonceResponseBody.nonce);
         assertTrue(getSessionNonceResponseBody.nonce.length() >= EXPECTED_SESSION_NONCE_BYTES);
 
-        byte[] decodedNonce = Base64.getDecoder().decode(getSessionNonceResponseBody.nonce);
+        byte[] decodedNonce = Base64.getUrlDecoder().decode(getSessionNonceResponseBody.nonce);
 
         assertEquals(EXPECTED_SESSION_NONCE_BYTES, decodedNonce.length);
+
+        var nonceFromDb = sessionNonceJpaRepository.findBySessionNonce(decodedNonce);
+        assertTrue(nonceFromDb.isPresent());
+        assertArrayEquals(decodedNonce, nonceFromDb.get().getSessionNonce());
     }
 
     @Test

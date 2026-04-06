@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="cdoc2-rp" id="create_table__session_nonce.0000" dbms="h2">
+        <createSequence cacheSize="20"
+                        cycle="false"
+                        incrementBy="1"
+                        ordered="false"
+                        sequenceName="SESSION_NONCE_PK_SEQUENCE"
+                        startValue="1"/>
+    </changeSet>
+    <changeSet author="cdoc2-rp" id="create_table__session_nonce.0000" dbms="postgresql">
+        <createSequence cacheSize="20"
+                        cycle="false"
+                        incrementBy="1"
+                        maxValue="9223372036854775807"
+                        minValue="1"
+                        sequenceName="SESSION_NONCE_PK_SEQUENCE"
+                        startValue="1"/>
+    </changeSet>
+
+    <changeSet author="cdoc2-rp" id="create_table__session_nonce.0001">
+
+        <createTable tableName="SESSION_NONCE">
+            <column name="ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_SESSION_NONCE"/>
+            </column>
+            <column
+                    name="NONCE"
+                    remarks="Session nonce"
+                    type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column
+                    name="CREATED_AT"
+                    remarks="Timestamp when the session nonce was created"
+                    type="TIMESTAMP"
+                    defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="SESSION_NONCE"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="cdoc2-rp" id="create_table__session_nonce.0002">
+
+        <createIndex indexName="IDX_SESSION_NONCE_NONCE"
+                     tableName="SESSION_NONCE"
+                     unique="true">
+            <column name="NONCE"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex indexName="IDX_SESSION_NONCE_NONCE" tableName="SESSION_NONCE"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
