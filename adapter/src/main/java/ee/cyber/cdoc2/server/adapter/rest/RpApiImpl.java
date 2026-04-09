@@ -9,6 +9,8 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import ee.cyber.cdoc2.server.adapter.clients.smartid.SessionStatusMapper;
+import ee.cyber.cdoc2.server.adapter.clients.smartid.SiDClient;
 import ee.cyber.cdoc2.server.adapter.generated.api.Cdoc2RpApiDelegate;
 import ee.cyber.cdoc2.server.adapter.generated.model.NonceResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionIDResponse;
@@ -16,13 +18,14 @@ import ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.WellKnownResponse;
 import ee.cyber.cdoc2.server.app.usecase.GetSessionNonce;
-import ee.cyber.cdoc2.server.app.usecase.StartSidAuthentication;
 
 @Component
 @RequiredArgsConstructor
 public class RpApiImpl implements Cdoc2RpApiDelegate {
+
+    private final SiDClient siDClient;
+
     private final GetSessionNonce getSessionNonce;
-    private final StartSidAuthentication startSidAuthentication;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Override
@@ -45,18 +48,21 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
 
     @Override
     public ResponseEntity<SessionIDResponse> sidAuthenticate(SidAuthenticateRequest sidAuthenticateRequest) {
-        var sessionId = startSidAuthentication.execute();
+        // TODO: Once SD-JWT is added, validate the correct fields
+        var sessionId = siDClient.authenticate(
+            // TODO: The document number will come from the SD-JWT
+            "PNOEE-40504040001-DEM0-Q",
+            sidAuthenticateRequest
+        );
 
         return ResponseEntity.ok(new SessionIDResponse(sessionId));
     }
 
     @Override
     public ResponseEntity<SessionStatusResponse> sidSession(UUID sessionID) {
-        InputStream input = getClass()
-            .getClassLoader()
-            .getResourceAsStream("sid-session-status-sample.json");
+        var sidResponse = siDClient.sessionStatus(sessionID);
 
-        SessionStatusResponse response = OBJECT_MAPPER.readValue(input, SessionStatusResponse.class);
+        SessionStatusResponse response = SessionStatusMapper.map(sidResponse);
 
         return ResponseEntity.ok(response);
     }

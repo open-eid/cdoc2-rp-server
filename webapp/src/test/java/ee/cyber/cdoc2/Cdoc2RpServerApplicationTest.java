@@ -9,21 +9,26 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import ee.cyber.cdoc2.server.adapter.db.jpa.SessionNonceJpaRepository;
+import ee.cyber.cdoc2.server.adapter.clients.smartid.SiDClient;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionIDResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponse;
 
-import static ee.cyber.cdoc2.RpRequestUtil.createSidAuthenticateRequest;
+import static ee.cyber.cdoc2.RpRequestUtil.*;
 import static ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponse.StateEnum.COMPLETE;
+import static ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponseResult.EndResultEnum.OK;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 class Cdoc2RpServerApplicationTest {
     @Autowired
     private SessionNonceJpaRepository sessionNonceJpaRepository;
@@ -40,6 +46,9 @@ class Cdoc2RpServerApplicationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private SiDClient sidClient;
 
     @Test
     void shouldGetSessionNonce() throws Exception {
@@ -87,35 +96,57 @@ class Cdoc2RpServerApplicationTest {
 
     @Test
     void shouldStartSidAuthentication() throws Exception {
+        // Given
+        var request = createSidAuthenticateRequest(
+            UUID.randomUUID(),
+            "DigiDoc4"
+        );
+        var sessionId = UUID.randomUUID();
+
+        when(sidClient.authenticate(EE_DOCUMENT_NUMBER_OK, request))
+            .thenReturn(sessionId);
+
+        // When
         MockHttpServletResponse response = mockMvc.perform(
                 post(URI.create("/sid/authenticate"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(OBJECT_MAPPER.writeValueAsString(createSidAuthenticateRequest()))
+                    .content(OBJECT_MAPPER.writeValueAsString(request))
             ).andExpect(status().isOk())
             .andReturn().getResponse();
 
+        // Then
         SessionIDResponse sessionIDResponse = OBJECT_MAPPER.readValue(
             response.getContentAsString(),
             SessionIDResponse.class
         );
 
         assertNotNull(sessionIDResponse.getSessionID());
+        assertEquals(sessionId, sessionIDResponse.getSessionID());
     }
 
     @Test
     void shouldGetSidSession() throws Exception {
-        var uuid = UUID.randomUUID();
+        // Given
+        var sessionId = UUID.randomUUID();
+        var sessionResponse = createSessionStatusResponse();
+
+        when(sidClient.sessionStatus(sessionId)).thenReturn(sessionResponse);
+
+        // When
         MockHttpServletResponse response = mockMvc.perform(
-                get(URI.create("/sid/session/" + uuid))
+                get(URI.create("/sid/session/" + sessionId))
             ).andExpect(status().isOk())
             .andReturn().getResponse();
 
+        // Then
         SessionStatusResponse sessionStatusResponse = OBJECT_MAPPER.readValue(
             response.getContentAsString(),
             SessionStatusResponse.class
         );
 
         assertEquals(COMPLETE, sessionStatusResponse.getState());
+        assertNotNull(sessionStatusResponse.getResult());
+        assertEquals(OK, sessionStatusResponse.getResult().getEndResult());
     }
 
     private record GetSessionNonceResponseBody(String nonce) {
