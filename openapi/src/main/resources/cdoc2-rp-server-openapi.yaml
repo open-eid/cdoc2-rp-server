@@ -3,7 +3,7 @@ info:
   contact:
     url: http://ria.ee
   title: cdoc2-rp-server
-  version: 1.0.1
+  version: 0.9.0
   description: |
     API for RP mediation process and session creation for MID/SID CDOC
 
@@ -14,9 +14,10 @@ servers:
 paths:
   '/session_nonce':
     post:
-      summary: Generates session nonce
+      summary: Generates session nonce.
       description: |
-        Returns a randomly generated nonce value and stores this value in the database for 24 hours
+        Returns a randomly generated nonce value and stores this value in the database for 24 hours.
+        Used by cdoc2-auth-server to construct the session token.
       tags:
         - cdoc2-rp
       operationId: getSessionNonce
@@ -60,28 +61,8 @@ paths:
         - cdoc2-rp
       operationId: sidAuthenticate
       parameters:
-        - name: x-cdoc2-session-token
-          in: header
-          schema:
-            type: string
-          required: true
-          description: |
-            SDJWT [Session token WIP](). Signed by cdoc2-auth-server using key identified by 
-            'kid' in JWT header. Contains a MID/SID signature as part of the payload. 'aud' claim
-            contains selectively-disclosed array element identifying a session nonce that is 
-            checked by the server x-cdoc2-session-token is presented to.
-        - name: x-cdoc2-session-x5c
-          in: header
-          schema:
-            type: string
-          required: true
-          description: |
-            PEM encoded X509 certificate (without newlines) that was used to 
-            generate the MID/SID signature in x-cdoc2-session-token payload. 
-            Certificate holder's identity is specified in Subject "serialnumber" field. Example certificate subject: 
-            'serialNumber = PNOEE-30303039914, GN = OK, SN = TESTNUMBER, CN = "TESTNUMBER,OK", C = EE'
-            Certificate full structure is defined in 
-            [Certificate and OCSP Profile for Smart-ID](https://www.skidsolutions.eu/wp-content/uploads/2024/10/SK-CPR-SMART-ID-EN-v4_7-20241127.pdf)
+        - $ref: '#/components/parameters/SessionTokenHeader'
+        - $ref: '#/components/parameters/SessionX5cHeader'
       requestBody:
         $ref: '#/components/requestBodies/SidAuthenticationRequestBody'
       responses:
@@ -112,28 +93,8 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: x-cdoc2-session-token
-          in: header
-          schema:
-            type: string
-          required: true
-          description: |
-            SDJWT [Session token WIP](). Signed by cdoc2-auth-server using key identified by 
-            'kid' in JWT header. Contains a MID/SID signature as part of the payload. 'aud' claim
-            contains selectively-disclosed array element identifying a session nonce that is 
-            checked by the server x-cdoc2-session-token is presented to.
-        - name: x-cdoc2-session-x5c
-          in: header
-          schema:
-            type: string
-          required: true
-          description: |
-            PEM encoded X509 certificate (without newlines) that was used to 
-            generate the MID/SID signature in x-cdoc2-session-token payload. 
-            Certificate holder's identity is specified in Subject "serialnumber" field. Example certificate subject: 
-            'serialNumber = PNOEE-30303039914, GN = OK, SN = TESTNUMBER, CN = "TESTNUMBER,OK", C = EE'
-            Certificate full structure is defined in 
-            [Certificate and OCSP Profile for Smart-ID](https://www.skidsolutions.eu/wp-content/uploads/2024/10/SK-CPR-SMART-ID-EN-v4_7-20241127.pdf)
+        - $ref: '#/components/parameters/SessionTokenHeader'
+        - $ref: '#/components/parameters/SessionX5cHeader'
       responses:
         "200":
           $ref: '#/components/responses/SessionStatusResponse'
@@ -548,6 +509,34 @@ components:
       enum:
         - numeric4
       description: The Verification Code (VC) type to use.
+
+  parameters:
+    SessionTokenHeader:
+      name: x-cdoc2-session-token
+      in: header
+      required: true
+      schema:
+        type: string
+      description: |
+        SDJWT [Session token WIP](). Signed by cdoc2-auth-server using key identified by 
+        'kid' in JWT header. Contains a MID/SID signature as part of the payload. 'aud' claim
+        contains selectively-disclosed array element identifying a session nonce that is 
+        checked by the server x-cdoc2-session-token is presented to.
+
+    SessionX5cHeader:
+      name: x-cdoc2-session-x5c
+      in: header
+      required: true
+      schema:
+        type: string
+      description: |
+        PEM encoded X509 certificate (without newlines) that was used to 
+        generate the MID/SID signature in x-cdoc2-session-token payload. 
+        Certificate holder's identity is specified in Subject "serialnumber" field. Example certificate subject: 
+        'serialNumber = PNOEE-30303039914, GN = OK, SN = TESTNUMBER, CN = "TESTNUMBER,OK", C = EE'
+        Certificate full structure is defined in 
+        [Certificate and OCSP Profile for Smart-ID](https://www.skidsolutions.eu/wp-content/uploads/2024/10/SK-CPR-SMART-ID-EN-v4_7-20241127.pdf)
+      
 
   requestBodies:
     SidAuthenticationRequestBody:
