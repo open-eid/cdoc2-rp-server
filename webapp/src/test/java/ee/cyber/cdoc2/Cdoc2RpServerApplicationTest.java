@@ -10,17 +10,18 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import ee.cyber.cdoc2.server.adapter.db.jpa.SessionNonceJpaRepository;
 import ee.cyber.cdoc2.server.adapter.clients.smartid.SiDClient;
+import ee.cyber.cdoc2.server.adapter.db.jpa.SessionNonceJpaRepository;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionIDResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponse;
 
@@ -111,6 +112,7 @@ class Cdoc2RpServerApplicationTest {
                 post(URI.create("/sid/authenticate"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(OBJECT_MAPPER.writeValueAsString(request))
+                    .headers(createDummyHeaders())
             ).andExpect(status().isOk())
             .andReturn().getResponse();
 
@@ -135,6 +137,7 @@ class Cdoc2RpServerApplicationTest {
         // When
         MockHttpServletResponse response = mockMvc.perform(
                 get(URI.create("/sid/session/" + sessionId))
+                    .headers(createDummyHeaders())
             ).andExpect(status().isOk())
             .andReturn().getResponse();
 
@@ -147,6 +150,13 @@ class Cdoc2RpServerApplicationTest {
         assertEquals(COMPLETE, sessionStatusResponse.getState());
         assertNotNull(sessionStatusResponse.getResult());
         assertEquals(OK, sessionStatusResponse.getResult().getEndResult());
+    }
+
+    private HttpHeaders createDummyHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-cdoc2-session-token", "dummy_session_token");
+        headers.add("x-cdoc2-session-x5c", "dummy_cert");
+        return headers;
     }
 
     private record GetSessionNonceResponseBody(String nonce) {
