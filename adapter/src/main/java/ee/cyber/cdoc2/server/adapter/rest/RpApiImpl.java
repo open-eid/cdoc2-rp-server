@@ -47,7 +47,11 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
     }
 
     @Override
-    public ResponseEntity<SessionIDResponse> sidAuthenticate(SidAuthenticateRequest sidAuthenticateRequest) {
+    public ResponseEntity<SessionIDResponse> sidAuthenticate(
+        String sessionToken,
+        String signingCertificate,
+        SidAuthenticateRequest sidAuthenticateRequest
+    ) {
         // TODO: Once SD-JWT is added, validate the correct fields
         var sessionId = siDClient.authenticate(
             // TODO: The document number will come from the SD-JWT
@@ -59,7 +63,11 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
     }
 
     @Override
-    public ResponseEntity<SessionStatusResponse> sidSession(UUID sessionID) {
+    public ResponseEntity<SessionStatusResponse> sidSession(
+        UUID sessionID,
+        String sessionToken,
+        String signingCertificate
+    ) {
         var sidResponse = siDClient.sessionStatus(sessionID);
 
         SessionStatusResponse response = SessionStatusMapper.map(sidResponse);
