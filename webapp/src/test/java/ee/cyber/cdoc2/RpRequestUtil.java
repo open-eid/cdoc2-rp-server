@@ -31,7 +31,7 @@ public final class RpRequestUtil {
 
     public static final UUID DEMO_RP_UUID = UUID.fromString("00000000-0000-4000-8000-000000000000");
     public static final String DEMO_RP_NAME = "DEMO";
-    public static final String EE_DOCUMENT_NUMBER_OK = "PNOEE-40504040001-DEM0-Q";
+    public static final String EE_SEMANTICS_IDENTIFIER_OK = "PNOEE-40504040001";
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -88,7 +88,6 @@ public final class RpRequestUtil {
 
         SessionResult sessionResult = new SessionResult();
         sessionResult.setEndResult("OK");
-        sessionResult.setDocumentNumber(EE_DOCUMENT_NUMBER_OK);
 
         SessionStatus sessionStatus = new SessionStatus();
 

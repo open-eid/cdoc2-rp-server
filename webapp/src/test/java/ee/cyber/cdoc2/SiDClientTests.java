@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class SiDClientTests {
 
-    private static final String EE_DOCUMENT_NUMBER_USER_REFUSED = "PNOEE-30403039917-MOCK-Q";
+    private static final String EE_SEMANTICS_IDENTIFIER_USER_REFUSED = "PNOEE-30403039917";
 
     @Autowired
     private SiDClient siDClient;
@@ -22,7 +22,7 @@ public class SiDClientTests {
     void smartIdAuthenticationSuccessfulTest() {
         var rpRequest = createSidAuthenticateRequest(DEMO_RP_UUID, DEMO_RP_NAME);
 
-        var sessionId = siDClient.authenticate(EE_DOCUMENT_NUMBER_OK, rpRequest);
+        var sessionId = siDClient.authenticate(EE_SEMANTICS_IDENTIFIER_OK, rpRequest);
 
         assertNotNull(sessionId);
         System.out.println(sessionId);
@@ -38,7 +38,7 @@ public class SiDClientTests {
     void smartIdAuthenticationUserRefusedTest() {
         var rpRequest = createSidAuthenticateRequest(DEMO_RP_UUID, DEMO_RP_NAME);
 
-        var sessionId = siDClient.authenticate(EE_DOCUMENT_NUMBER_USER_REFUSED, rpRequest);
+        var sessionId = siDClient.authenticate(EE_SEMANTICS_IDENTIFIER_USER_REFUSED, rpRequest);
 
         assertNotNull(sessionId);
 
