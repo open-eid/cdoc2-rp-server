@@ -1,10 +1,11 @@
 package ee.cyber.cdoc2.server.app.usecase;
 
-import conf.AuthCertificateConf;
-import conf.AuthServerJwkConf;
-import conf.SidTrustedIssuers;
+import ee.cyber.cdoc2.server.app.conf.AuthCertificateConf;
+import ee.cyber.cdoc2.server.app.conf.AuthServerJwkConf;
+import ee.cyber.cdoc2.server.app.conf.SidTrustedIssuers;
 import lombok.RequiredArgsConstructor;
 
+import java.time.Clock;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class ValidateSessionTokenImpl implements ValidateSessionToken {
     private final SidTrustedIssuers sidTrustedIssuers;
     private final AuthCertificateConf authCertificateConf;
     private final FindSessionNonce findSessionNonce;
+    private final Clock clock;
 
     @Override
     public Response execute(Request request) throws VerificationException {
@@ -28,7 +30,8 @@ public class ValidateSessionTokenImpl implements ValidateSessionToken {
 
         SessionTokenVerifier sessionTokenVerifier = new SessionTokenVerifier(
             sidTrustedIssuers.getTrustStore(),
-            authCertificateConf.isRevocationChecksEnabled()
+            authCertificateConf.isRevocationChecksEnabled(),
+            clock
         );
 
         SessionTokenVerifier.Response response = sessionTokenVerifier.getVerifiedSessionNonce(

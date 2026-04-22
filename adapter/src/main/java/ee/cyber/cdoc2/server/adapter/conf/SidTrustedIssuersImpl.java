@@ -1,6 +1,6 @@
 package ee.cyber.cdoc2.server.adapter.conf;
 
-import conf.SidTrustedIssuers;
+import ee.cyber.cdoc2.server.app.conf.SidTrustedIssuers;
 import lombok.RequiredArgsConstructor;
 
 import java.security.KeyStore;

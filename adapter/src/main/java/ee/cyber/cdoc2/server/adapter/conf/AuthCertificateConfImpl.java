@@ -1,6 +1,6 @@
 package ee.cyber.cdoc2.server.adapter.conf;
 
-import conf.AuthCertificateConf;
+import ee.cyber.cdoc2.server.app.conf.AuthCertificateConf;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;

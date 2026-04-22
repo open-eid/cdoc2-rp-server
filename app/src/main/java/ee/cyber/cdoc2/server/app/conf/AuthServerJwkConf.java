@@ -1,4 +1,4 @@
-package conf;
+package ee.cyber.cdoc2.server.app.conf;
 
 
 import java.util.List;

@@ -5,6 +5,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
@@ -64,6 +65,8 @@ class Cdoc2RpServerApplicationTest {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final int EXPECTED_SESSION_NONCE_BYTES = 16;
     private static final int WIREMOCK_PORT = 8090;
+    private static final Instant INSTANT_NOW_SESSION_TOKEN_NOT_EXPIRED =
+        Instant.parse("2026-04-22T12:30:00Z");
 
     @RegisterExtension
     static WireMockExtension wiremock = WireMockExtension.newInstance()
@@ -79,6 +82,8 @@ class Cdoc2RpServerApplicationTest {
 
     @MockitoBean
     private SiDClient sidClient;
+    @MockitoBean
+    private Clock clock;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -95,6 +100,8 @@ class Cdoc2RpServerApplicationTest {
 
         sessionNonceJpaRepository.deleteAll();
         saveNonceForSessionToken();
+
+        when(clock.instant()).thenReturn(INSTANT_NOW_SESSION_TOKEN_NOT_EXPIRED);
     }
 
     @Test

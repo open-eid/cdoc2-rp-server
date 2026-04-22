@@ -1,6 +1,6 @@
 package ee.cyber.cdoc2.server.adapter.conf;
 
-import conf.AuthServerJwkConf;
+import ee.cyber.cdoc2.server.app.conf.AuthServerJwkConf;
 import lombok.RequiredArgsConstructor;
 
 import java.text.ParseException;
