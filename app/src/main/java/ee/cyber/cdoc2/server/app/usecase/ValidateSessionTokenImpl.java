@@ -1,8 +1,5 @@
 package ee.cyber.cdoc2.server.app.usecase;
 
-import ee.cyber.cdoc2.server.app.conf.AuthCertificateConf;
-import ee.cyber.cdoc2.server.app.conf.AuthServerJwkConf;
-import ee.cyber.cdoc2.server.app.conf.SidTrustedIssuers;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Clock;
@@ -13,7 +10,11 @@ import org.springframework.stereotype.Component;
 import com.nimbusds.jose.jwk.JWK;
 
 import ee.cyber.cdoc2.auth.SessionTokenVerifier;
+import ee.cyber.cdoc2.auth.TokenVerificationResponse;
 import ee.cyber.cdoc2.auth.exception.VerificationException;
+import ee.cyber.cdoc2.server.app.conf.AuthCertificateConf;
+import ee.cyber.cdoc2.server.app.conf.AuthServerJwkConf;
+import ee.cyber.cdoc2.server.app.conf.SidTrustedIssuers;
 
 @Component
 @RequiredArgsConstructor
@@ -34,13 +35,13 @@ public class ValidateSessionTokenImpl implements ValidateSessionToken {
             clock
         );
 
-        SessionTokenVerifier.Response response = sessionTokenVerifier.getVerifiedSessionNonce(
+        TokenVerificationResponse response = sessionTokenVerifier.verify(
             request.sessionToken(),
             request.signingCertificate(),
             keys
         );
 
-        String uriString = response.sessionNonceUri().toString();
+        String uriString = response.nonceUri().toString();
         String sessionNonce = uriString.substring(uriString.lastIndexOf('/') + 1);
 
         if (!findSessionNonce.isPresent(sessionNonce)) {
