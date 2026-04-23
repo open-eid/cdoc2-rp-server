@@ -1,4 +1,4 @@
-package ee.cyber.cdoc2.server.adapter.rest;
+package ee.cyber.cdoc2.server.adapter.api;
 
 import lombok.RequiredArgsConstructor;
 import tools.jackson.databind.ObjectMapper;
@@ -6,9 +6,11 @@ import tools.jackson.databind.ObjectMapper;
 import java.io.InputStream;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import ee.cyber.cdoc2.auth.exception.VerificationException;
 import ee.cyber.cdoc2.server.adapter.clients.smartid.SessionStatusMapper;
 import ee.cyber.cdoc2.server.adapter.clients.smartid.SiDClient;
 import ee.cyber.cdoc2.server.adapter.generated.api.Cdoc2RpApiDelegate;
@@ -18,12 +20,14 @@ import ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.WellKnownResponse;
 import ee.cyber.cdoc2.server.app.usecase.GetSessionNonce;
+import ee.cyber.cdoc2.server.app.usecase.ValidateSessionToken;
 
 @Component
 @RequiredArgsConstructor
 public class RpApiImpl implements Cdoc2RpApiDelegate {
 
     private final SiDClient siDClient;
+    private final ValidateSessionToken validateSessionToken;
 
     private final GetSessionNonce getSessionNonce;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -52,10 +56,19 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
         String signingCertificate,
         SidAuthenticateRequest sidAuthenticateRequest
     ) {
-        // TODO: Once SD-JWT is added, validate the correct fields
+        ValidateSessionToken.Response validationResponse;
+        try {
+            validationResponse =
+                validateSessionToken.execute(new ValidateSessionToken.Request(
+                    sessionToken,
+                    signingCertificate
+                ));
+        } catch (VerificationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).build();
+        }
+
         var sessionId = siDClient.authenticate(
-            // TODO: The document number will come from the SD-JWT
-            "PNOEE-40504040001-DEM0-Q",
+            validationResponse.semanticsIdentifier(),
             sidAuthenticateRequest
         );
 
@@ -68,6 +81,15 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
         String sessionToken,
         String signingCertificate
     ) {
+        try {
+            validateSessionToken.execute(new ValidateSessionToken.Request(
+                sessionToken,
+                signingCertificate
+            ));
+        } catch (VerificationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).build();
+        }
+
         var sidResponse = siDClient.sessionStatus(sessionID);
 
         SessionStatusResponse response = SessionStatusMapper.map(sidResponse);
