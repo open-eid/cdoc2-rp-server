@@ -64,7 +64,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
                     signingCertificate
                 ));
         } catch (VerificationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
         }
 
         var sessionId = siDClient.authenticate(
@@ -87,7 +87,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
                 signingCertificate
             ));
         } catch (VerificationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
         }
 
         var sidResponse = siDClient.sessionStatus(sessionID);
