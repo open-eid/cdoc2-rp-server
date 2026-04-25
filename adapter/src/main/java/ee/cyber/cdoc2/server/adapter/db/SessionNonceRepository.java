@@ -23,7 +23,7 @@ public class SessionNonceRepository implements StoreSessionNonce, FindSessionNon
     @Transactional
     public void execute(byte[] nonce) {
         var sessionNonce = new SessionNonceEntity();
-        sessionNonce.setSessionNonce(nonce);
+        sessionNonce.setNonce(nonce);
 
         sessionNonceJpaRepository.save(sessionNonce);
     }
@@ -32,6 +32,6 @@ public class SessionNonceRepository implements StoreSessionNonce, FindSessionNon
     public boolean isPresent(String sessionNonce) {
         byte[] decodedSessionNonce = Base64.getUrlDecoder().decode(sessionNonce);
 
-        return sessionNonceJpaRepository.findBySessionNonce(decodedSessionNonce).isPresent();
+        return sessionNonceJpaRepository.findByNonce(decodedSessionNonce).isPresent();
     }
 }
