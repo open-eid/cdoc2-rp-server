@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import ee.cyber.cdoc2.server.adapter.conf.RelyingPartyConf;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 
 import static ee.cyber.cdoc2.server.adapter.clients.smartid.SmartIdUtilMethods.*;
@@ -21,6 +22,7 @@ import static ee.cyber.cdoc2.server.adapter.clients.smartid.SmartIdUtilMethods.*
 @RequiredArgsConstructor
 public class SiDClient {
     private final SmartIdClient smartIdClient;
+    private final RelyingPartyConf relyingPartyConf;
 
     public UUID authenticate(
         String semanticsIdentifier,
@@ -37,8 +39,6 @@ public class SiDClient {
             signatureProtocolParams.getSignatureAlgorithmParameters().getHashAlgorithm().getValue()
         );
         var interactions = decodeFromBase64(sidAuthenticateRequest.getInteractions());
-        var rpUUID = sidAuthenticateRequest.getRelyingPartyUUID();
-        var rpName = sidAuthenticateRequest.getRelyingPartyName();
 
         var authenticationSessionResponse = smartIdClient
             .createNotificationAuthentication()
@@ -48,8 +48,8 @@ public class SiDClient {
             .withSignatureAlgorithm(signatureAlgorithm)
             .withHashAlgorithm(hashAlgorithm)
             .withInteractions(interactions)
-            .withRelyingPartyUUID(String.valueOf(rpUUID))
-            .withRelyingPartyName(rpName)
+            .withRelyingPartyUUID(String.valueOf(relyingPartyConf.getUuid()))
+            .withRelyingPartyName(relyingPartyConf.getName())
             .initAuthenticationSession();
 
         return UUID.fromString(authenticationSessionResponse.sessionID());

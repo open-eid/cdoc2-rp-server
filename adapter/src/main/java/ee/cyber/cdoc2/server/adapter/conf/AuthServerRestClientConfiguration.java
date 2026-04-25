@@ -1,4 +1,4 @@
-package ee.cyber.cdoc2.server.adapter.rest;
+package ee.cyber.cdoc2.server.adapter.conf;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -14,7 +14,7 @@ public class AuthServerRestClientConfiguration {
 
     @ConfigurationProperties(prefix = "app.restclient.auth-server")
     public record AppProperties(
-        String hostUri,
+        String hostUrl,
         @DefaultValue(CONF_DEFAULT_READ_TIMEOUT) int readTimeout,
         @DefaultValue(CONF_DEFAULT_CONNECTION_REQUEST_TIMEOUT) int connectionRequestTimeout
     ) {
@@ -28,7 +28,7 @@ public class AuthServerRestClientConfiguration {
         factory.setConnectionRequestTimeout(props.connectionRequestTimeout);
 
         return RestClient.builder()
-            .baseUrl(props.hostUri)
+            .baseUrl(props.hostUrl)
             .requestFactory(factory)
             .build();
     }
