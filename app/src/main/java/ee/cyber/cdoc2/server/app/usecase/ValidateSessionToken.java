@@ -5,7 +5,10 @@ import ee.cyber.cdoc2.auth.exception.VerificationException;
 public interface ValidateSessionToken {
     Response execute(Request request) throws VerificationException;
 
-    record Request(String sessionToken, String signingCertificate) {
+    record Request(
+        String sessionToken,
+        String signingCertificate
+    ) {
     }
 
     record Response(String semanticsIdentifier) {

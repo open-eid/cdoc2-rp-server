@@ -3,7 +3,7 @@ info:
   contact:
     url: http://ria.ee
   title: cdoc2-rp-server
-  version: 0.9.0
+  version: 0.9.0-draft
   description: |
     API for RP mediation process and session creation for MID/SID CDOC
 
@@ -380,6 +380,11 @@ components:
       type: string
       format: uuid
       description: UUID of Relying Party.
+
+    SemanticsIdentifier:
+      type: string
+      description: semantics identifier of the authentication subject
+
     RelyingPartyName:
       type: string
       description: |
@@ -545,6 +550,7 @@ components:
         application/json:
           schema:
             required:
+              - semanticsIdentifier
               - relyingPartyUUID
               - relyingPartyName
               - signatureProtocol
@@ -553,6 +559,8 @@ components:
               - vcType
             type: object
             properties:
+              semanticsIdentifier:
+                $ref: '#/components/schemas/SemanticsIdentifier'
               relyingPartyUUID:
                 $ref: '#/components/schemas/RelyingPartyUUID'
               relyingPartyName:

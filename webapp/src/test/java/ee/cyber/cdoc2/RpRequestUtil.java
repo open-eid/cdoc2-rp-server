@@ -74,6 +74,7 @@ public final class RpRequestUtil {
         );
 
         return new SidAuthenticateRequest()
+            .semanticsIdentifier(EE_SEMANTICS_IDENTIFIER_OK)
             .relyingPartyUUID(rpUUID)
             .relyingPartyName(rpName)
             .certificateLevel(AuthCertificateLevel.QUALIFIED)

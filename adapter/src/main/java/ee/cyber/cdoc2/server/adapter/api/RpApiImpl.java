@@ -63,6 +63,11 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
                     sessionToken,
                     signingCertificate
                 ));
+
+            validateSemanticsIdentifier(
+                validationResponse,
+                sidAuthenticateRequest.getSemanticsIdentifier()
+            );
         } catch (VerificationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
         }
@@ -73,6 +78,17 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
         );
 
         return ResponseEntity.ok(new SessionIDResponse(sessionId));
+    }
+
+    private void validateSemanticsIdentifier(
+        ValidateSessionToken.Response validationResponse,
+        String semanticsIdentifier
+    ) throws VerificationException {
+        if (!validationResponse.semanticsIdentifier()
+            .equals(semanticsIdentifier)) {
+            throw new VerificationException("Request semantics identifier does not "
+                + "match session token");
+        }
     }
 
     @Override
