@@ -7,6 +7,8 @@ import ee.sk.smartid.rest.dao.Interaction;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 import ee.cyber.cdoc2.server.adapter.generated.model.AuthCertificateLevel;
@@ -37,8 +39,9 @@ public final class SmartIdUtilMethods {
 
     public static List<NotificationInteraction> decodeFromBase64(byte[] interactions) {
         List<Interaction> parsedInteractions = MAPPER.readValue(
-            interactions,
-            new TypeReference<>() { }
+            new String(Base64.getDecoder().decode(interactions), StandardCharsets.UTF_8),
+            new TypeReference<>() {
+            }
         );
 
         return parsedInteractions.stream()
@@ -48,11 +51,14 @@ public final class SmartIdUtilMethods {
 
     public static NotificationInteraction toNotificationInteraction(Interaction interaction) {
         return switch (interaction.type()) {
-            case "displayTextAndPIN" -> NotificationInteraction.displayTextAndPin(interaction.displayText60());
-            case "confirmationMessage" -> NotificationInteraction.confirmationMessage(interaction.displayText200());
+            case "displayTextAndPIN" ->
+                NotificationInteraction.displayTextAndPin(interaction.displayText60());
+            case "confirmationMessage" ->
+                NotificationInteraction.confirmationMessage(interaction.displayText200());
             case "confirmationMessageAndVerificationCodeChoice" ->
                 NotificationInteraction.confirmationMessageAndVerificationCodeChoice(interaction.displayText200());
-            default -> throw new IllegalArgumentException("Unsupported interaction type: " + interaction.type());
+            default ->
+                throw new IllegalArgumentException("Unsupported interaction type: " + interaction.type());
         };
     }
 }
