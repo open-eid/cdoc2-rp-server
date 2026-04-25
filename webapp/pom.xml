@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>cdoc2-rp-server-app</artifactId>
+    <artifactId>cdoc2-rp-server-webapp</artifactId>
     <packaging>jar</packaging>
 
     <properties>
