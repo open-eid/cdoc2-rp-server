@@ -35,13 +35,21 @@ public class ValidateSessionTokenImpl implements ValidateSessionToken {
             clock
         );
 
-        TokenVerificationResponse response = sessionTokenVerifier.verify(
+        TokenVerificationResponse verificationResponse = sessionTokenVerifier.verify(
             request.sessionToken(),
             request.signingCertificate(),
             keys
         );
 
-        String uriString = response.nonceUri().toString();
+        if (request.semanticsIdentifier() != null
+            && !verificationResponse.identifier().getSemanticsIdentifier()
+            .equals(request.semanticsIdentifier())) {
+            throw new VerificationException(
+                "Request semantics identifier does not match session token"
+            );
+        }
+
+        String uriString = verificationResponse.nonceUri().toString();
         String sessionNonce = uriString.substring(uriString.lastIndexOf('/') + 1);
 
         if (!findSessionNonce.isPresent(sessionNonce)) {
@@ -49,7 +57,7 @@ public class ValidateSessionTokenImpl implements ValidateSessionToken {
         }
 
         return new Response(
-            response.identifier().getSemanticsIdentifier()
+            verificationResponse.identifier().getSemanticsIdentifier()
         );
     }
 }

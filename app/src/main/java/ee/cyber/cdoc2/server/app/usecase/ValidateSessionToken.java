@@ -1,5 +1,7 @@
 package ee.cyber.cdoc2.server.app.usecase;
 
+import jakarta.annotation.Nullable;
+
 import ee.cyber.cdoc2.auth.exception.VerificationException;
 
 public interface ValidateSessionToken {
@@ -7,7 +9,8 @@ public interface ValidateSessionToken {
 
     record Request(
         String sessionToken,
-        String signingCertificate
+        String signingCertificate,
+        @Nullable String semanticsIdentifier
     ) {
     }
 
