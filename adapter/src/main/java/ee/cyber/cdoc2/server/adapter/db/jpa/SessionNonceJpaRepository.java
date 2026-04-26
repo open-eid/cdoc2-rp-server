@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SessionNonceJpaRepository extends JpaRepository<SessionNonceEntity, Long> {
     Optional<SessionNonceEntity> findByNonce(byte[] nonce);
+
+    boolean existsByNonce(byte[] nonce);
 }

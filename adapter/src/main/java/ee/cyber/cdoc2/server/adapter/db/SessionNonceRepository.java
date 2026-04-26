@@ -32,6 +32,6 @@ public class SessionNonceRepository implements StoreSessionNonce, FindSessionNon
     public boolean isPresent(String sessionNonce) {
         byte[] decodedSessionNonce = Base64.getUrlDecoder().decode(sessionNonce);
 
-        return sessionNonceJpaRepository.findByNonce(decodedSessionNonce).isPresent();
+        return sessionNonceJpaRepository.existsByNonce(decodedSessionNonce);
     }
 }
