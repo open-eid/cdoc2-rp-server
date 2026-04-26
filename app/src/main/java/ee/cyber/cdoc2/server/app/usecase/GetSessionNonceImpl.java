@@ -6,12 +6,10 @@ import lombok.RequiredArgsConstructor;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-import org.jspecify.annotations.NullMarked;
 import org.springframework.stereotype.Component;
 
-@NullMarked
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class GetSessionNonceImpl implements GetSessionNonce {
     private static final int SESSION_NONCE_BYTES = 16;
     private final StoreSessionNonce storeSessionNonce;
@@ -36,3 +34,4 @@ public class GetSessionNonceImpl implements GetSessionNonce {
         return nonce;
     }
 }
+
