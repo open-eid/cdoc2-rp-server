@@ -61,7 +61,8 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
             validationResponse =
                 validateSessionToken.execute(new ValidateSessionToken.Request(
                     sessionToken,
-                    signingCertificate
+                    signingCertificate,
+                    sidAuthenticateRequest.getSemanticsIdentifier()
                 ));
         } catch (VerificationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
@@ -84,7 +85,8 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
         try {
             validateSessionToken.execute(new ValidateSessionToken.Request(
                 sessionToken,
-                signingCertificate
+                signingCertificate,
+                null
             ));
         } catch (VerificationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();

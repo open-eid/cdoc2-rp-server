@@ -13,6 +13,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.UUID;
 
 import ee.cyber.cdoc2.server.adapter.generated.model.AuthCertificateLevel;
@@ -68,14 +69,18 @@ public final class RpRequestUtil {
                 .signatureAlgorithmParameters(signatureAlgorithmParameters);
 
         String interactions = createSidInteractions();
+        byte[] interactionsBase64Bytes = Base64.getEncoder().encode(
+            interactions.getBytes(StandardCharsets.UTF_8)
+        );
 
         return new SidAuthenticateRequest()
+            .semanticsIdentifier(EE_SEMANTICS_IDENTIFIER_OK)
             .relyingPartyUUID(rpUUID)
             .relyingPartyName(rpName)
             .certificateLevel(AuthCertificateLevel.QUALIFIED)
             .signatureProtocol(AuthSignatureProtocol.ACSP_V2)
             .signatureProtocolParameters(signatureProtocolParameters)
-            .interactions(interactions.getBytes(StandardCharsets.UTF_8))
+            .interactions(interactionsBase64Bytes)
             .vcType(VerificationCodeType.NUMERIC4);
     }
 

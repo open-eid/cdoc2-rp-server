@@ -1,20 +1,22 @@
 package ee.cyber.cdoc2.server.adapter.conf;
 
-import ee.cyber.cdoc2.server.app.conf.AuthServerJwkConf;
 import lombok.RequiredArgsConstructor;
 
 import java.text.ParseException;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Configuration;
 
 import com.nimbusds.jose.jwk.JWK;
 
 import ee.cyber.cdoc2.server.adapter.rest.AuthServerClient;
+import ee.cyber.cdoc2.server.app.conf.AuthServerJwkConf;
 
 @Configuration
 @RequiredArgsConstructor
 public class AuthServerJwkConfImpl implements AuthServerJwkConf {
+    @Nullable
     private List<JWK> publicKeys;
     private final AuthServerClient authServerClient;
 

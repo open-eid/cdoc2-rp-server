@@ -124,9 +124,9 @@ class Cdoc2RpServerApplicationTest {
 
         assertEquals(EXPECTED_SESSION_NONCE_BYTES, decodedNonce.length);
 
-        var nonceFromDb = sessionNonceJpaRepository.findBySessionNonce(decodedNonce);
+        var nonceFromDb = sessionNonceJpaRepository.findByNonce(decodedNonce);
         assertTrue(nonceFromDb.isPresent());
-        assertArrayEquals(decodedNonce, nonceFromDb.get().getSessionNonce());
+        assertArrayEquals(decodedNonce, nonceFromDb.get().getNonce());
     }
 
     @Test
@@ -208,7 +208,7 @@ class Cdoc2RpServerApplicationTest {
 
     private void saveNonceForSessionToken() {
         SessionNonceEntity entity = new SessionNonceEntity();
-        entity.setSessionNonce(Base64.getUrlDecoder().decode(SESSION_NONCE_FOR_TOKEN));
+        entity.setNonce(Base64.getUrlDecoder().decode(SESSION_NONCE_FOR_TOKEN));
         entity.setCreatedAt(Instant.now());
         sessionNonceJpaRepository.save(entity);
     }

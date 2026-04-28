@@ -24,8 +24,8 @@ public class SessionNonceEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "session_nonce", nullable = false)
-    private byte[] sessionNonce;
+    @Column(name = "nonce", nullable = false)
+    private byte[] nonce;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

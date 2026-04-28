@@ -6,10 +6,10 @@
     <parent>
         <groupId>ee.cyber.cdoc2</groupId>
         <artifactId>cdoc2-rp-server</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
-    <artifactId>cdoc2-rp-server-app</artifactId>
+    <artifactId>cdoc2-rp-server-webapp</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -77,14 +77,14 @@
         <dependency>
             <groupId>ee.cyber.cdoc2</groupId>
             <artifactId>db-changelog</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${revision}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>ee.cyber.cdoc2</groupId>
             <artifactId>adapter</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
 
