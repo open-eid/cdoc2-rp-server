@@ -152,10 +152,7 @@ class Cdoc2RpServerApplicationTest {
     @Test
     void shouldStartSidAuthentication() throws Exception {
         // Given
-        var request = createSidAuthenticateRequest(
-            UUID.randomUUID(),
-            "DigiDoc4"
-        );
+        var request = createSidAuthenticateRequest();
         var sessionId = UUID.randomUUID();
 
         when(sidClient.authenticate(EE_SEMANTICS_IDENTIFIER_OK, request))
