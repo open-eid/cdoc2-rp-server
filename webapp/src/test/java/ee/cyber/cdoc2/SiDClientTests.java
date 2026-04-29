@@ -20,7 +20,7 @@ public class SiDClientTests {
 
     @Test
     void smartIdAuthenticationSuccessfulTest() {
-        var rpRequest = createSidAuthenticateRequest(DEMO_RP_UUID, DEMO_RP_NAME);
+        var rpRequest = createSidAuthenticateRequest();
 
         var sessionId = siDClient.authenticate(EE_SEMANTICS_IDENTIFIER_OK, rpRequest);
 
@@ -36,7 +36,7 @@ public class SiDClientTests {
 
     @Test
     void smartIdAuthenticationUserRefusedTest() {
-        var rpRequest = createSidAuthenticateRequest(DEMO_RP_UUID, DEMO_RP_NAME);
+        var rpRequest = createSidAuthenticateRequest();
 
         var sessionId = siDClient.authenticate(EE_SEMANTICS_IDENTIFIER_USER_REFUSED, rpRequest);
 

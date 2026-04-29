@@ -53,10 +53,7 @@ public final class RpRequestUtil {
     private static final int DEFAULT_SALT_LENGTH = 64;
     private static final int RP_CHALLENGE_LENGTH = 64;
 
-    public static SidAuthenticateRequest createSidAuthenticateRequest(
-        UUID rpUUID,
-        String rpName
-    ) {
+    public static SidAuthenticateRequest createSidAuthenticateRequest() {
         var signatureAlgorithmParameters =
             new SignatureAlgorithmParametersInRequest(
                 HashAlgorithm.SHA_512
@@ -75,8 +72,6 @@ public final class RpRequestUtil {
 
         return new SidAuthenticateRequest()
             .semanticsIdentifier(EE_SEMANTICS_IDENTIFIER_OK)
-            .relyingPartyUUID(rpUUID)
-            .relyingPartyName(rpName)
             .certificateLevel(AuthCertificateLevel.QUALIFIED)
             .signatureProtocol(AuthSignatureProtocol.ACSP_V2)
             .signatureProtocolParameters(signatureProtocolParameters)
