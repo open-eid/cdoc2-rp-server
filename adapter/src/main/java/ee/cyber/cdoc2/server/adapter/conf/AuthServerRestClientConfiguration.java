@@ -25,7 +25,7 @@ import org.springframework.web.client.RestClient;
 public class AuthServerRestClientConfiguration {
     private static final String CONF_DEFAULT_READ_TIMEOUT = "5000";
     private static final String CONF_DEFAULT_CONNECTION_REQUEST_TIMEOUT = "5000";
-    private static final String SSL_BUNDLE_NAME = "auth-server";
+    private static final String SSL_BUNDLE_NAME = "trusted-infra";
 
     @ConfigurationProperties(prefix = "app.restclient.auth-server")
     public record AppProperties(
