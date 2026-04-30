@@ -60,7 +60,6 @@ In configuration files, the following properties must start with the `spring.` p
 Keystores and trust stores are defined with Spring SSL bundles.
 
 Trust store example, where `somebundle` is a placeholder for an actual bundle name:
-
 ```
 spring.ssl.bundle.jks.somebundle.truststore.location=truststore.jks
 spring.ssl.bundle.jks.somebundle.truststore.password=changeit
@@ -68,12 +67,11 @@ spring.ssl.bundle.jks.somebundle.truststore.type=jks
 ```
 
 Keystore example, where `somebundle` is a placeholder for an actual bundle name::
-
 ```
 spring.ssl.bundle.jks.somebundle.keystore.location=keystore.p12
 spring.ssl.bundle.jks.somebundle.keystore.password=changeit
 spring.ssl.bundle.jks.somebundle.keystore.type=pkcs12
-spring.ssl.bundle.jks.somebundle.key.alias=authServerKey
+spring.ssl.bundle.jks.somebundle.key.alias=rpServerKey
 ```
 
 Defined bundles:
