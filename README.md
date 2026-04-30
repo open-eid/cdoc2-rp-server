@@ -30,7 +30,7 @@
 ### Application properties
 
 In configuration files, the following properties must start with the `app.` prefix:
-`app.restclient.session-nonce.retries`
+`app.restclient.auth-server.hostUrl`
 
 | application prop                                         | default       | description                                                                 |
 |:---------------------------------------------------------|:--------------|:----------------------------------------------------------------------------|
