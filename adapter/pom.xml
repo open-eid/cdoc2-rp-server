@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
-            <version>4.0.3</version>
+            <version>${spring-boot.version}</version>
         </dependency>
 
         <dependency>
@@ -120,7 +120,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
-            <version>4.0.3</version>
+            <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
