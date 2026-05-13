@@ -42,6 +42,8 @@ In configuration files, the following properties must start with the `app.` pref
 | rp.certificate-level                                     | QUALIFIED     | The required certificate level when authenticating through SID/MID services |
 | rp.scheme-name                                           | smart-id-demo | Name of the SID scheme used (eg. `smart-id`)                                |
 | smartid.client.hostUrl                                   |               | URL of the SID RP API                                                       |
+| session-nonce.expired.clean-up.cron                      |               | Cron expression for the session nonce clean-up job                          |
+| session-nonce.expired.clean-up.delete-limit              | 1000          | Maximum number of expired session nonces deleted per clean-up run           |
 
 ### Spring properties
 

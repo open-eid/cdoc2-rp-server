@@ -1,6 +1,7 @@
 package ee.cyber.cdoc2.server.adapter.api;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
@@ -22,6 +23,7 @@ import ee.cyber.cdoc2.server.adapter.generated.model.WellKnownResponse;
 import ee.cyber.cdoc2.server.app.usecase.GetSessionNonce;
 import ee.cyber.cdoc2.server.app.usecase.ValidateSessionToken;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RpApiImpl implements Cdoc2RpApiDelegate {

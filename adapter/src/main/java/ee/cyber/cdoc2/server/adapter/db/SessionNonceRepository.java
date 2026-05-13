@@ -3,6 +3,8 @@ package ee.cyber.cdoc2.server.adapter.db;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
 import org.jspecify.annotations.NullMarked;
@@ -33,5 +35,10 @@ public class SessionNonceRepository implements StoreSessionNonce, FindSessionNon
         byte[] decodedSessionNonce = Base64.getUrlDecoder().decode(sessionNonce);
 
         return sessionNonceJpaRepository.existsByNonce(decodedSessionNonce);
+    }
+
+    public int deleteExpiredNonces(int limit) {
+        Instant cutoff = Instant.now().minus(24, ChronoUnit.HOURS);
+        return sessionNonceJpaRepository.deleteExpiredNonces(cutoff, limit);
     }
 }
