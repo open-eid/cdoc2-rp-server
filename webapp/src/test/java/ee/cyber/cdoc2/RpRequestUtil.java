@@ -1,5 +1,6 @@
 package ee.cyber.cdoc2;
 
+import ee.sk.mid.rest.dao.MidSessionStatus;
 import ee.sk.smartid.rest.dao.SessionCertificate;
 import ee.sk.smartid.rest.dao.SessionMaskGenAlgorithm;
 import ee.sk.smartid.rest.dao.SessionMaskGenAlgorithmParameters;
@@ -20,10 +21,15 @@ import ee.cyber.cdoc2.server.adapter.generated.model.AuthCertificateLevel;
 import ee.cyber.cdoc2.server.adapter.generated.model.AuthSignatureProtocol;
 import ee.cyber.cdoc2.server.adapter.generated.model.AuthSignatureProtocolParameters;
 import ee.cyber.cdoc2.server.adapter.generated.model.HashAlgorithm;
+import ee.cyber.cdoc2.server.adapter.generated.model.MidAuthenticateRequest;
+import ee.cyber.cdoc2.server.adapter.generated.model.MidDisplayTextFormat;
+import ee.cyber.cdoc2.server.adapter.generated.model.MidLanguage;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.SignatureAlgorithm;
 import ee.cyber.cdoc2.server.adapter.generated.model.SignatureAlgorithmParametersInRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.VerificationCodeType;
+
+import static ee.cyber.cdoc2.server.adapter.generated.model.MidHashType.SHA512;
 
 public final class RpRequestUtil {
 
@@ -33,6 +39,9 @@ public final class RpRequestUtil {
     public static final UUID DEMO_RP_UUID = UUID.fromString("00000000-0000-4000-8000-000000000000");
     public static final String DEMO_RP_NAME = "DEMO";
     public static final String EE_SEMANTICS_IDENTIFIER_OK = "PNOEE-40504040001";
+    public static final String MID_IDENTIFIER_OK = "51307149560";
+    public static final String MID_PHONE_NUMBER = "+37200000000";
+    public static final String MID_DISPLAY_TEXT = "Authenticate to decrypt CDOC2 document";
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -146,9 +155,27 @@ public final class RpRequestUtil {
         return OBJECT_MAPPER.writeValueAsString(array);
     }
 
-    private static byte[] createRpChallengeBytes() {
+    public static byte[] createRpChallengeBytes() {
         byte[] rpChallengeBytes = new byte[RP_CHALLENGE_LENGTH];
         new SecureRandom().nextBytes(rpChallengeBytes);
         return rpChallengeBytes;
+    }
+
+    public static MidAuthenticateRequest createMidAuthenticateRequest() {
+        return new MidAuthenticateRequest()
+            .phoneNumber(MID_PHONE_NUMBER)
+            .nationalIdentityNumber(MID_IDENTIFIER_OK)
+            .hash(createRpChallengeBytes())
+            .hashType(SHA512)
+            .language(MidLanguage.ENG)
+            .displayText(MID_DISPLAY_TEXT)
+            .displayTextFormat(MidDisplayTextFormat.GSM_7);
+    }
+
+    public static MidSessionStatus createMidSessionStatus() {
+        MidSessionStatus status = new MidSessionStatus();
+        status.setState("COMPLETE");
+        status.setResult("OK");
+        return status;
     }
 }

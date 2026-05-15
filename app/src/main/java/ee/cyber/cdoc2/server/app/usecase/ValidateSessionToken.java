@@ -10,10 +10,10 @@ public interface ValidateSessionToken {
     record Request(
         String sessionToken,
         String signingCertificate,
-        @Nullable String semanticsIdentifier
+        @Nullable String identifier
     ) {
     }
 
-    record Response(String semanticsIdentifier) {
+    record Response(String identifier) {
     }
 }
