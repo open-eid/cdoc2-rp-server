@@ -37,14 +37,17 @@ In configuration files, the following properties must start with the `app.` pref
 | restclient.auth-server.hostUrl                           |               | URL of the cdoc2-auth-server component                                      |
 | restclient.auth-server.read-timeout                      | 5000          | read timeout for auth server requests, in millisecond                       |
 | restclient.auth-server.hosconnection-request-timeouttUrl | 5000          | connection timeout for auth server requests, in milliseconds                |
-| rp.name                                                  |               | Relying party name that rp-server presents to the SID/MID services          |
-| rp.uuid                                                  |               | Relying party UUID that rp-server presents to the SID/MID services          |
+| rp.sid.name                                              |               | Relying party name that rp-server presents to the SID services              |
+| rp.mid.name                                              |               | Relying party name that rp-server presents to the MID services              |
+| rp.sid.uuid                                              |               | Relying party UUID that rp-server presents to the SID services              |
+| rp.mid.uuid                                              |               | Relying party UUID that rp-server presents to the MID services              |
 | rp.certificate-level                                     | QUALIFIED     | The required certificate level when authenticating through SID/MID services |
 | rp.scheme-name                                           | smart-id-demo | Name of the SID scheme used (eg. `smart-id`)                                |
 | smartid.client.hostUrl                                   |               | URL of the SID RP API                                                       |
 | session-nonce.expired.clean-up.cron                      |               | Cron expression for the session nonce clean-up job                          |
 | session-nonce.expired.clean-up.delete-limit              | 1000          | Maximum number of expired session nonces deleted per clean-up run           |
-
+| mobileid.client.hostUrl                                  |               | URL of the MID RP API.                                                      |
+| mobileid.client.timeoutSeconds                           | 0             | Per-request long-poll timeout in seconds. Set to 0 to disable long polling  |
 ### Spring properties
 
 In configuration files, the following properties must start with the `spring.` prefix:
@@ -78,11 +81,12 @@ spring.ssl.bundle.jks.somebundle.key.alias=rpServerKey
 
 Defined bundles:
 
-| bundle name   | type                 | description                                                                    |
-|:--------------|:---------------------|:-------------------------------------------------------------------------------|
-| server-bundle | keystore, truststore | keystore and truststore (if any) to use for embedded server SSL connections    |
-| sid-server    | truststore           | provides truststore for SID server connections                                 |
-| trusted-infra | truststore           | provides truststore for REST clients communicating with other CDOC2 components |
+| bundle name   | type                 | description                                                                        |
+|:--------------|:---------------------|:-----------------------------------------------------------------------------------|
+| server-bundle | keystore, truststore | keystore and truststore (if any) to use for embedded server SSL connections        |
+| sid-server    | truststore           | provides truststore for SID server connections                                     |
+| mid-server    | truststore           | provides truststore for MID server connections                                     |
+| trusted-infra | truststore           | provides truststore for REST clients communicating with other CDOC2 components     |
 
 
 ### Building the docker image locally

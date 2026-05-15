@@ -12,9 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import ee.cyber.cdoc2.auth.exception.VerificationException;
+import ee.cyber.cdoc2.server.adapter.clients.mobileid.MiDClient;
+import ee.cyber.cdoc2.server.adapter.clients.mobileid.MiDSessionStatusMapper;
 import ee.cyber.cdoc2.server.adapter.clients.smartid.SessionStatusMapper;
 import ee.cyber.cdoc2.server.adapter.clients.smartid.SiDClient;
 import ee.cyber.cdoc2.server.adapter.generated.api.Cdoc2RpApiDelegate;
+import ee.cyber.cdoc2.server.adapter.generated.model.MidAuthenticateRequest;
+import ee.cyber.cdoc2.server.adapter.generated.model.MidSessionStatusResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.NonceResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionIDResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponse;
@@ -23,12 +27,16 @@ import ee.cyber.cdoc2.server.adapter.generated.model.WellKnownResponse;
 import ee.cyber.cdoc2.server.app.usecase.GetSessionNonce;
 import ee.cyber.cdoc2.server.app.usecase.ValidateSessionToken;
 
+import static ee.cyber.cdoc2.server.adapter.clients.mobileid.MidValidationUtil.*;
+
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class RpApiImpl implements Cdoc2RpApiDelegate {
 
     private final SiDClient siDClient;
+    private final MiDClient miDClient;
     private final ValidateSessionToken validateSessionToken;
 
     private final GetSessionNonce getSessionNonce;
@@ -71,7 +79,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
         }
 
         var sessionId = siDClient.authenticate(
-            validationResponse.semanticsIdentifier(),
+            validationResponse.identifier(),
             sidAuthenticateRequest
         );
 
@@ -97,6 +105,57 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
         var sidResponse = siDClient.sessionStatus(sessionID);
 
         SessionStatusResponse response = SessionStatusMapper.map(sidResponse);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<SessionIDResponse> midAuthenticate(
+        String sessionToken,
+        String signingCertificate,
+        MidAuthenticateRequest midAuthenticateRequest
+    ) {
+        validatePhoneNumberAndNationalIdentityNumber(
+            midAuthenticateRequest.getPhoneNumber(),
+            midAuthenticateRequest.getNationalIdentityNumber()
+        );
+
+        try {
+            validateSessionToken.execute(new ValidateSessionToken.Request(
+                sessionToken,
+                signingCertificate,
+                midAuthenticateRequest.getNationalIdentityNumber()
+            ));
+        } catch (VerificationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
+        }
+        var sessionId = miDClient.authenticate(
+            midAuthenticateRequest.getNationalIdentityNumber(),
+            midAuthenticateRequest
+        );
+
+        return ResponseEntity.ok(new SessionIDResponse(sessionId));
+    }
+
+
+    @Override
+    public ResponseEntity<MidSessionStatusResponse> midSession(
+        UUID sessionID,
+        String sessionToken,
+        String signingCertificate
+    ) {
+        try {
+            validateSessionToken.execute(new ValidateSessionToken.Request(
+                sessionToken,
+                signingCertificate,
+                null
+            ));
+        } catch (VerificationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
+        }
+        var midResponse = miDClient.sessionStatus(sessionID);
+
+        MidSessionStatusResponse response = MiDSessionStatusMapper.map(midResponse);
 
         return ResponseEntity.ok(response);
     }
