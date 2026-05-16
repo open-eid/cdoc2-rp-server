@@ -17,6 +17,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <http-message-signatures.version>1.8</http-message-signatures.version>
     </properties>
 
     <dependencies>
@@ -35,6 +36,12 @@
             <groupId>ee.cyber.cdoc2</groupId>
             <artifactId>cdoc2-auth-token</artifactId>
             <version>0.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.authlete</groupId>
+            <artifactId>http-message-signatures</artifactId>
+            <version>${http-message-signatures.version}</version>
         </dependency>
 
         <dependency>
