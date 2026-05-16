@@ -4,12 +4,14 @@ import ee.sk.smartid.AuthenticationCertificateLevel;
 import ee.sk.smartid.HashAlgorithm;
 import ee.sk.smartid.common.notification.interactions.NotificationInteraction;
 import ee.sk.smartid.rest.dao.Interaction;
-import tools.jackson.core.type.TypeReference;
-import tools.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ee.cyber.cdoc2.server.adapter.generated.model.AuthCertificateLevel;
 
@@ -37,7 +39,8 @@ public final class SmartIdUtilMethods {
         ));
     }
 
-    public static List<NotificationInteraction> decodeFromBase64(byte[] interactions) {
+    public static List<NotificationInteraction> decodeFromBase64(byte[] interactions)
+        throws JsonProcessingException {
         List<Interaction> parsedInteractions = MAPPER.readValue(
             new String(Base64.getDecoder().decode(interactions), StandardCharsets.UTF_8),
             new TypeReference<>() {

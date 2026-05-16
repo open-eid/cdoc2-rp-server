@@ -2,8 +2,8 @@ package ee.cyber.cdoc2.server.adapter.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import tools.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.UUID;
@@ -12,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ee.cyber.cdoc2.auth.exception.VerificationException;
 import ee.cyber.cdoc2.server.adapter.clients.mobileid.MiDClient;
@@ -59,9 +61,12 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
             .getClassLoader()
             .getResourceAsStream("well-known-sample.json");
 
-        WellKnownResponse response = OBJECT_MAPPER.readValue(input, WellKnownResponse.class);
-
-        return ResponseEntity.ok(response);
+        try {
+            WellKnownResponse response = OBJECT_MAPPER.readValue(input, WellKnownResponse.class);
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -140,7 +145,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
 
         return ResponseEntity.ok(new SessionIDResponse(sessionId));
     }
-    
+
     @Override
     public ResponseEntity<MidSessionStatusResponse> midSession(
         UUID sessionID,

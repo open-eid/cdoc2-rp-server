@@ -6,9 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ee.cyber.cdoc2.server.adapter.clients.smartid.SiDClient;
 
-
-import static ee.cyber.cdoc2.RpRequestUtil.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static ee.cyber.cdoc2.RpRequestUtil.EE_SEMANTICS_IDENTIFIER_OK;
+import static ee.cyber.cdoc2.RpRequestUtil.createSidAuthenticateRequest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class SiDClientTests {
@@ -19,7 +20,7 @@ public class SiDClientTests {
     private SiDClient siDClient;
 
     @Test
-    void smartIdAuthenticationSuccessfulTest() {
+    void smartIdAuthenticationSuccessfulTest() throws Exception {
         var rpRequest = createSidAuthenticateRequest();
 
         var sessionId = siDClient.authenticate(EE_SEMANTICS_IDENTIFIER_OK, rpRequest);
@@ -35,7 +36,7 @@ public class SiDClientTests {
     }
 
     @Test
-    void smartIdAuthenticationUserRefusedTest() {
+    void smartIdAuthenticationUserRefusedTest() throws Exception {
         var rpRequest = createSidAuthenticateRequest();
 
         var sessionId = siDClient.authenticate(EE_SEMANTICS_IDENTIFIER_USER_REFUSED, rpRequest);

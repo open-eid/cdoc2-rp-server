@@ -30,7 +30,7 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webmvc</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot.version}</version>
         </dependency>
 
@@ -67,7 +67,6 @@
             <version>2.4.240</version>
             <scope>test</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.glassfish.expressly</groupId>
@@ -115,13 +114,7 @@
             <artifactId>jakarta.ws.rs-api</artifactId>
             <version>3.1.0</version>
         </dependency>
-        <!-- Force jackson-annotations to 2.20 which is compatible with
-             both tools.jackson 3.x (Spring Boot 4) and smart-id 2.x usage -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.20</version>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
