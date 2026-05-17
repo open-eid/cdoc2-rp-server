@@ -61,7 +61,7 @@ public class CounterSignImpl implements CounterSign {
 
         byte[] signatureBytes = signSignatureMetadata(metadata, ctx);
 
-        String signatureInput = SIGNATURE_LABEL + "=:" + metadata.serialize();
+        String signatureInput = SIGNATURE_LABEL + "=" + metadata.serialize();
         String signatureValue = SIGNATURE_LABEL + "=:" + Base64.getEncoder()
             .encodeToString(signatureBytes) + ":";
 
