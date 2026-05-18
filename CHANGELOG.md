@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.6.0]
 
 ### Features
 * Create a job to delete the expired session nonces
