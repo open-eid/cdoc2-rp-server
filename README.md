@@ -49,7 +49,7 @@ In configuration files, the following properties must start with the `app.` pref
 | session-nonce.expired.clean-up.cron                      |               | Cron expression for the session nonce clean-up job                          |
 | session-nonce.expired.clean-up.delete-limit              | 1000          | Maximum number of expired session nonces deleted per clean-up run           |
 | mobileid.client.hostUrl                                  |               | URL of the MID RP API.                                                      |
-| mobileid.client.timeoutSeconds                           | 0             | Per-request long-poll timeout in seconds. Set to 0 to disable long polling  |
+| mobileid.client.timeoutSeconds                           | 5             | timeout for MID client requests                                             |
 
 ### Spring properties
 

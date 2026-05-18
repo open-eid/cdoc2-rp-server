@@ -22,9 +22,8 @@ public class MobileIdClientConfiguration {
     @ConfigurationProperties(prefix = "app.mobileid.client")
     public record AppProperties(
         String hostUrl,
-        @DefaultValue("0") int timeoutSeconds
+        @DefaultValue("5") int timeoutSeconds
     ) {
-
     }
 
     @Bean
@@ -36,7 +35,6 @@ public class MobileIdClientConfiguration {
             .withRelyingPartyUUID(relyingPartyConf.getMidUuid().toString())
             .withRelyingPartyName(relyingPartyConf.getMidName())
             .withTrustStore(trustStore)
-            .withLongPollingTimeoutSeconds(props.timeoutSeconds())
             .build();
     }
 }
