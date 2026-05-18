@@ -28,7 +28,7 @@ public class SiDClientTests {
     private SiDClient siDClient;
 
     @Test
-    void smartIdAuthenticationSuccessfulTest() throws InterruptedException {
+    void smartIdAuthenticationSuccessfulTest() throws Exception {
         var rpRequest = createSidAuthenticateRequest();
 
         var sessionId = siDClient.authenticate(EE_SEMANTICS_IDENTIFIER_OK, rpRequest);
@@ -44,7 +44,7 @@ public class SiDClientTests {
     }
 
     @Test
-    void smartIdAuthenticationUserRefusedTest() throws InterruptedException {
+    void smartIdAuthenticationUserRefusedTest() throws Exception {
         var rpRequest = createSidAuthenticateRequest();
 
         var sessionId = siDClient.authenticate(EE_SEMANTICS_IDENTIFIER_USER_REFUSED, rpRequest);

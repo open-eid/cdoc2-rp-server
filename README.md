@@ -104,5 +104,5 @@ To build Docker images:
 To run the build container:
 
 ```bash
-docker run --rm --network=host ghcr.io/open-eid/cdoc2-rp-server:0.5.0-SNAPSHOT
+docker run --rm --network=host ghcr.io/open-eid/cdoc2-rp-server:0.6.0
 ```

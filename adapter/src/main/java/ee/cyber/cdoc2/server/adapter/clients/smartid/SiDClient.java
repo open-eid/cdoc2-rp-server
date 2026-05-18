@@ -3,21 +3,27 @@ package ee.cyber.cdoc2.server.adapter.clients.smartid;
 
 import ee.sk.smartid.RpChallenge;
 import ee.sk.smartid.SmartIdClient;
+import ee.sk.smartid.common.notification.interactions.NotificationInteraction;
 import ee.sk.smartid.rest.SessionStatusPoller;
 import ee.sk.smartid.rest.dao.SemanticsIdentifier;
 import ee.sk.smartid.rest.dao.SessionStatus;
 import ee.sk.smartid.signature.AuthenticationSignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ee.cyber.cdoc2.server.adapter.conf.RelyingPartyConfImpl;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 
 import static ee.cyber.cdoc2.server.adapter.clients.smartid.SmartIdUtilMethods.*;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SiDClient {
@@ -38,7 +44,14 @@ public class SiDClient {
         var hashAlgorithm = mapHashAlgorithm(
             signatureProtocolParams.getSignatureAlgorithmParameters().getHashAlgorithm().getValue()
         );
-        var interactions = decodeFromBase64(sidAuthenticateRequest.getInteractions());
+
+        List<NotificationInteraction> interactions;
+        try {
+            interactions = decodeFromBase64(sidAuthenticateRequest.getInteractions());
+        } catch (JsonProcessingException e) {
+            log.error("Unable to decode interactions from SID authenticate request");
+            throw new RuntimeException(e);
+        }
 
         var authenticationSessionResponse = smartIdClient
             .createNotificationAuthentication()

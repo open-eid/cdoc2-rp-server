@@ -9,14 +9,16 @@ import ee.sk.smartid.rest.dao.SessionResult;
 import ee.sk.smartid.rest.dao.SessionSignature;
 import ee.sk.smartid.rest.dao.SessionSignatureAlgorithmParameters;
 import ee.sk.smartid.rest.dao.SessionStatus;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ArrayNode;
-import tools.jackson.databind.node.ObjectNode;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.UUID;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ee.cyber.cdoc2.server.adapter.generated.model.AuthCertificateLevel;
 import ee.cyber.cdoc2.server.adapter.generated.model.AuthSignatureProtocol;
@@ -65,7 +67,8 @@ public final class RpRequestUtil {
     private static final int DEFAULT_SALT_LENGTH = 64;
     private static final int RP_CHALLENGE_LENGTH = 64;
 
-    public static SidAuthenticateRequest createSidAuthenticateRequest() {
+    public static SidAuthenticateRequest createSidAuthenticateRequest()
+        throws JsonProcessingException {
         var signatureAlgorithmParameters =
             new SignatureAlgorithmParametersInRequest(
                 HashAlgorithm.SHA_512
@@ -120,7 +123,7 @@ public final class RpRequestUtil {
         signature.setValue(exampleSignature);
         signature.setServerRandom("+wVP2U/SMKVkVrggDjNTXFV/");
         signature.setUserChallenge("TLSjYRH2oYw8tW2bq0it0IUb7WIFkCLgF8NTc7-4Zq4");
-        signature.setFlowType("Notification");
+        signature.setFlowType("NOTIFICATION");
         signature.setSignatureAlgorithm("rsassa-pss");
         signature.setSignatureAlgorithmParameters(signatureAlgorithmParameters);
         return signature;
@@ -142,7 +145,7 @@ public final class RpRequestUtil {
         return signatureAlgorithmParameters;
     }
 
-    private static String createSidInteractions() {
+    private static String createSidInteractions() throws JsonProcessingException {
         ArrayNode array = OBJECT_MAPPER.createArrayNode();
 
         ObjectNode node1 = OBJECT_MAPPER.createObjectNode();
