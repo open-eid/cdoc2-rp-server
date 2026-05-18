@@ -28,7 +28,7 @@ import ee.cyber.cdoc2.server.app.conf.RelyingPartyConf;
 @RequiredArgsConstructor
 public class CounterSignImpl implements CounterSign {
     private static final String HASH_ALGORITHM = "SHA-256";
-    private static final String SIGNATURE_LABEL = "rp-counter-signature";
+    private static final String SIGNATURE_LABEL = "rp-sig";
 
     private final RelyingPartyConf relyingPartyConf;
     private final JwtKeysConf jwtKeysConf;
@@ -61,7 +61,7 @@ public class CounterSignImpl implements CounterSign {
 
         byte[] signatureBytes = signSignatureMetadata(metadata, ctx);
 
-        String signatureInput = SIGNATURE_LABEL + "=:" + metadata.serialize();
+        String signatureInput = SIGNATURE_LABEL + "=" + metadata.serialize();
         String signatureValue = SIGNATURE_LABEL + "=:" + Base64.getEncoder()
             .encodeToString(signatureBytes) + ":";
 
