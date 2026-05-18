@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.UUID;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -24,10 +26,11 @@ import ee.cyber.cdoc2.server.adapter.generated.model.SessionIDResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.WellKnownResponse;
+import ee.cyber.cdoc2.server.app.usecase.CounterSign;
 import ee.cyber.cdoc2.server.app.usecase.GetSessionNonce;
 import ee.cyber.cdoc2.server.app.usecase.ValidateSessionToken;
 
-import static ee.cyber.cdoc2.server.adapter.clients.mobileid.MidValidationUtil.*;
+import static ee.cyber.cdoc2.server.adapter.clients.mobileid.MidValidationUtil.validatePhoneNumberAndNationalIdentityNumber;
 
 
 @Slf4j
@@ -38,6 +41,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
     private final SiDClient siDClient;
     private final MiDClient miDClient;
     private final ValidateSessionToken validateSessionToken;
+    private final CounterSign counterSign;
 
     private final GetSessionNonce getSessionNonce;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -136,8 +140,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
 
         return ResponseEntity.ok(new SessionIDResponse(sessionId));
     }
-
-
+    
     @Override
     public ResponseEntity<MidSessionStatusResponse> midSession(
         UUID sessionID,
@@ -157,6 +160,35 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
 
         MidSessionStatusResponse response = MiDSessionStatusMapper.map(midResponse);
 
+        if (response.getSignature() != null) {
+            return counterSignedResponse(response);
+        }
+
         return ResponseEntity.ok(response);
+    }
+
+    private ResponseEntity<MidSessionStatusResponse> counterSignedResponse(
+        MidSessionStatusResponse response
+    ) {
+        Objects.requireNonNull(response.getSignature());
+
+        CounterSign.Response counterSignResponse =
+            counterSign.execute(new CounterSign.Request(
+                response.getSignature().getValue()
+            ));
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .headers(createCounterSignatureHeaders(counterSignResponse))
+            .body(response);
+    }
+
+    private HttpHeaders createCounterSignatureHeaders(CounterSign.Response counterSignResponse) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-rp-signed-hash", counterSignResponse.signedHash());
+        headers.add("x-rp-name", counterSignResponse.rpName());
+        headers.add("Signature-Input", counterSignResponse.signatureInput());
+        headers.add("Signature", counterSignResponse.signature());
+
+        return headers;
     }
 }

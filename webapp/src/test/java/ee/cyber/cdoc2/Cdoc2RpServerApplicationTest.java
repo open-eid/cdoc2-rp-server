@@ -50,6 +50,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -259,6 +260,10 @@ class Cdoc2RpServerApplicationTest {
                 get(URI.create("/mid/session/" + sessionId))
                     .headers(createHeadersForMid())
             ).andExpect(status().isOk())
+            .andExpect(header().exists("x-rp-signed-hash"))
+            .andExpect(header().exists("x-rp-name"))
+            .andExpect(header().exists("Signature"))
+            .andExpect(header().exists("Signature-Input"))
             .andReturn().getResponse();
 
         // Then

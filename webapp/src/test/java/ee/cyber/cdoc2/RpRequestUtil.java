@@ -1,5 +1,6 @@
 package ee.cyber.cdoc2;
 
+import ee.sk.mid.rest.dao.MidSessionSignature;
 import ee.sk.mid.rest.dao.MidSessionStatus;
 import ee.sk.smartid.rest.dao.SessionCertificate;
 import ee.sk.smartid.rest.dao.SessionMaskGenAlgorithm;
@@ -44,6 +45,8 @@ public final class RpRequestUtil {
     public static final String MID_DISPLAY_TEXT = "Authenticate to decrypt CDOC2 document";
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final String MID_SAMPLE_SIGNATURE_VALUE =
+        "IO6qDBcUtpIpcQSuTVp49TJ3jbJc+WA0z+26JSFgfW2x29y2I1dSMeHfUewAv4k55YxT1mYKw9DW9Efagp6tWg==";
 
     private static final String exampleSignature =
         "Vak2Q0NiFnh6+lW+YaJuB8yMYM7k3I5QfsUxS3Y1Ddm3qy6HvebLl0/t17dq289/+4mGx45qnHVNj1CzqF88lY"
@@ -173,9 +176,13 @@ public final class RpRequestUtil {
     }
 
     public static MidSessionStatus createMidSessionStatus() {
+        MidSessionSignature signature = new MidSessionSignature();
+        signature.setValue(MID_SAMPLE_SIGNATURE_VALUE);
+
         MidSessionStatus status = new MidSessionStatus();
         status.setState("COMPLETE");
         status.setResult("OK");
+        status.setSignature(signature);
         return status;
     }
 }
