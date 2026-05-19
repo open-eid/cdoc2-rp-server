@@ -5,6 +5,7 @@ import ee.sk.smartid.rest.dao.SessionStatus;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +28,7 @@ public class SiDClientTests {
     @Autowired
     private SiDClient siDClient;
 
+    @Tag("net")
     @Test
     void smartIdAuthenticationSuccessfulTest() throws Exception {
         var rpRequest = createSidAuthenticateRequest();
@@ -43,6 +45,7 @@ public class SiDClientTests {
         assertEquals("OK", sessionStatusResponse.getResult().getEndResult());
     }
 
+    @Tag("net")
     @Test
     void smartIdAuthenticationUserRefusedTest() throws Exception {
         var rpRequest = createSidAuthenticateRequest();

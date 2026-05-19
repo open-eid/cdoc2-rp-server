@@ -5,6 +5,7 @@ import ee.sk.mid.rest.dao.MidSessionStatus;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +36,7 @@ public class MiDClientTests {
     @Autowired
     private MiDClient miDClient;
 
+    @Tag("net")
     @Test
     void mobileIdAuthenticationSuccessfulTest() throws InterruptedException {
         var request = createMidAuthenticateRequest(PHONE_OK, IDENTITY_OK);
@@ -53,6 +55,7 @@ public class MiDClientTests {
         assertEquals("OK", sessionStatus.getResult());
     }
 
+    @Tag("net")
     @Test
     void mobileIdAuthenticationUserCancelledTest() throws InterruptedException {
         var request = createMidAuthenticateRequest(PHONE_USER_CANCELLED, IDENTITY_USER_CANCELLED);
