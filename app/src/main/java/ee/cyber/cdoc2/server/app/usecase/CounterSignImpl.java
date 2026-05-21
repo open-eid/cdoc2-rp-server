@@ -21,7 +21,7 @@ import com.authlete.hms.SignatureMetadata;
 import com.authlete.hms.SignatureMetadataParameters;
 import com.authlete.hms.impl.JoseHttpSigner;
 
-import ee.cyber.cdoc2.server.app.conf.JwtKeysConf;
+import ee.cyber.cdoc2.server.app.conf.CountersignKeyConf;
 import ee.cyber.cdoc2.server.app.conf.RelyingPartyConf;
 
 @Component
@@ -31,7 +31,7 @@ public class CounterSignImpl implements CounterSign {
     private static final String SIGNATURE_LABEL = "rp-sig";
 
     private final RelyingPartyConf relyingPartyConf;
-    private final JwtKeysConf jwtKeysConf;
+    private final CountersignKeyConf countersignKeyConf;
 
     @Override
     public Response execute(Request request) {
@@ -49,7 +49,7 @@ public class CounterSignImpl implements CounterSign {
 
         SignatureMetadataParameters params = new SignatureMetadataParameters()
             .setCreated(Instant.now())
-            .setKeyid(jwtKeysConf.getKid());
+            .setKeyid(countersignKeyConf.getKid());
 
         SignatureMetadata metadata = new SignatureMetadata(
             List.of(
@@ -89,7 +89,7 @@ public class CounterSignImpl implements CounterSign {
         try {
             SignatureBase base = new SignatureBaseBuilder(context).build(metadata);
             return base.sign(new JoseHttpSigner(
-                jwtKeysConf.ecPrivateKey()
+                countersignKeyConf.ecPrivateKey()
             ));
         } catch (SignatureException e) {
             throw new RuntimeException(e);

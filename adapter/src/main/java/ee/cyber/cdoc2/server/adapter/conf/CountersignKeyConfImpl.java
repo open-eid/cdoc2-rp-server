@@ -14,22 +14,22 @@ import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWK;
 
 import ee.cyber.cdoc2.server.adapter.resource.ResourceLoaderWrapper;
-import ee.cyber.cdoc2.server.app.conf.JwtKeysConf;
+import ee.cyber.cdoc2.server.app.conf.CountersignKeyConf;
 
 @Configuration
-public class JwtKeysConfImpl implements JwtKeysConf {
+public class CountersignKeyConfImpl implements CountersignKeyConf {
     private final ResourceLoaderWrapper resourceLoader;
     private final ECKey ecPrivateKey;
     private final String kid;
 
-    @ConfigurationProperties(prefix = "app.well-known")
+    @ConfigurationProperties(prefix = "app.countersign")
     public record AppProperties(
         @Nullable String ecPrivateKeyPem,
         @Nullable String kid
     ) {
     }
 
-    public JwtKeysConfImpl(
+    public CountersignKeyConfImpl(
         AppProperties props,
         ResourceLoaderWrapper resourceLoader
     ) throws JOSEException,
@@ -63,11 +63,11 @@ public class JwtKeysConfImpl implements JwtKeysConf {
 
     private void validateConf(AppProperties props) {
         if (props.ecPrivateKeyPem == null || props.ecPrivateKeyPem.isBlank()) {
-            throw new IllegalStateException("app.well-known.ecPrivateKeyPem must be defined");
+            throw new IllegalStateException("app.countersign.ecPrivateKeyPem must be defined");
         }
 
         if (props.kid == null || props.kid.isBlank()) {
-            throw new IllegalStateException("app.well-known.kid must be defined");
+            throw new IllegalStateException("app.countersign.kid must be defined");
         }
     }
 }

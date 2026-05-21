@@ -53,7 +53,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
 
     @Override
     public ResponseEntity<WellKnownResponse> getWellKnown() {
-        return ResponseEntity.ok(wellKnownJwkConf.getJwk());
+        return ResponseEntity.ok(wellKnownJwkConf.getJwkResponse());
     }
 
     @Override
