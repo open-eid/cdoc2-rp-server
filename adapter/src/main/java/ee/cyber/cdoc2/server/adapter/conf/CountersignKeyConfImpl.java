@@ -24,14 +24,14 @@ public class CountersignKeyConfImpl implements CountersignKeyConf {
 
     @ConfigurationProperties(prefix = "app.countersign")
     public record AppProperties(
-        @Nullable String ecPrivateKeyPem,
-        @Nullable String kid
+        @Nullable String ecPrivateKeyPem
     ) {
     }
 
     public CountersignKeyConfImpl(
         AppProperties props,
-        ResourceLoaderWrapper resourceLoader
+        ResourceLoaderWrapper resourceLoader,
+        WellKnownJwkConf wellKnownJwkConf
     ) throws JOSEException,
         IOException {
         validateConf(props);
@@ -42,7 +42,7 @@ public class CountersignKeyConfImpl implements CountersignKeyConf {
         this.ecPrivateKey = new ECKey.Builder(ecKeyWithoutAlg)
             .algorithm(JWSAlgorithm.ES256)
             .build();
-        this.kid = props.kid();
+        this.kid = wellKnownJwkConf.getActivePublicKeyKid();
     }
 
     @Override
@@ -64,10 +64,6 @@ public class CountersignKeyConfImpl implements CountersignKeyConf {
     private void validateConf(AppProperties props) {
         if (props.ecPrivateKeyPem == null || props.ecPrivateKeyPem.isBlank()) {
             throw new IllegalStateException("app.countersign.ecPrivateKeyPem must be defined");
-        }
-
-        if (props.kid == null || props.kid.isBlank()) {
-            throw new IllegalStateException("app.countersign.kid must be defined");
         }
     }
 }
