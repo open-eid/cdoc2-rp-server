@@ -5,5 +5,5 @@ import com.nimbusds.jose.jwk.ECKey;
 public interface JwtKeysConf {
     ECKey ecPrivateKey();
 
-    String getEcKeyKid();
+    String getKid();
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,12 +20,12 @@ import ee.cyber.cdoc2.server.app.conf.JwtKeysConf;
 public class JwtKeysConfImpl implements JwtKeysConf {
     private final ResourceLoaderWrapper resourceLoader;
     private final ECKey ecPrivateKey;
-    private final String ecKeyKid;
+    private final String kid;
 
     @ConfigurationProperties(prefix = "app.well-known")
     public record AppProperties(
-        String ecPrivateKeyName,
-        String ecKeyKid
+        @Nullable String ecPrivateKeyPem,
+        @Nullable String kid
     ) {
     }
 
@@ -33,14 +34,15 @@ public class JwtKeysConfImpl implements JwtKeysConf {
         ResourceLoaderWrapper resourceLoader
     ) throws JOSEException,
         IOException {
+        validateConf(props);
         this.resourceLoader = resourceLoader;
-        String ecPrivatePem = readFile(props.ecPrivateKeyName());
+        String ecPrivatePem = readFile(props.ecPrivateKeyPem());
         ECKey ecKeyWithoutAlg = JWK.parseFromPEMEncodedObjects(ecPrivatePem).toECKey();
 
         this.ecPrivateKey = new ECKey.Builder(ecKeyWithoutAlg)
             .algorithm(JWSAlgorithm.ES256)
             .build();
-        this.ecKeyKid = props.ecKeyKid();
+        this.kid = props.kid();
     }
 
     @Override
@@ -48,15 +50,24 @@ public class JwtKeysConfImpl implements JwtKeysConf {
         return this.ecPrivateKey;
     }
 
-
     @Override
-    public String getEcKeyKid() {
-        return ecKeyKid;
+    public String getKid() {
+        return kid;
     }
 
     private String readFile(String name) throws IOException {
         try (InputStream is = resourceLoader.loadResource(name).getInputStream()) {
             return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
+
+    private void validateConf(AppProperties props) {
+        if (props.ecPrivateKeyPem == null || props.ecPrivateKeyPem.isBlank()) {
+            throw new IllegalStateException("app.well-known.ecPrivateKeyPem must be defined");
+        }
+
+        if (props.kid == null || props.kid.isBlank()) {
+            throw new IllegalStateException("app.well-known.kid must be defined");
         }
     }
 }

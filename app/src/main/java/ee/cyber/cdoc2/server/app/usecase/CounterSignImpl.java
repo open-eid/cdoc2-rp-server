@@ -49,7 +49,7 @@ public class CounterSignImpl implements CounterSign {
 
         SignatureMetadataParameters params = new SignatureMetadataParameters()
             .setCreated(Instant.now())
-            .setKeyid(jwtKeysConf.getEcKeyKid());
+            .setKeyid(jwtKeysConf.getKid());
 
         SignatureMetadata metadata = new SignatureMetadata(
             List.of(

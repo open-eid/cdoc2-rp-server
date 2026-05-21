@@ -32,24 +32,25 @@
 In configuration files, the following properties must start with the `app.` prefix:
 `app.restclient.auth-server.hostUrl`
 
-| application prop                                         | default       | description                                                                 |
-|:---------------------------------------------------------|:--------------|:----------------------------------------------------------------------------|
-| restclient.auth-server.hostUrl                           |               | URL of the cdoc2-auth-server component                                      |
-| restclient.auth-server.read-timeout                      | 5000          | read timeout for auth server requests, in millisecond                       |
-| restclient.auth-server.hosconnection-request-timeouttUrl | 5000          | connection timeout for auth server requests, in milliseconds                |
-| well-known.ec-private-key-name                           |               | name of the EC private key to use for MID countersignatures                 |
-| well-known.ec-key-kid                                    |               | key id of the EC private key to use for MID countersignatures               |
-| rp.sid.name                                              |               | Relying party name that rp-server presents to the SID services              |
-| rp.mid.name                                              |               | Relying party name that rp-server presents to the MID services              |
-| rp.sid.uuid                                              |               | Relying party UUID that rp-server presents to the SID services              |
-| rp.mid.uuid                                              |               | Relying party UUID that rp-server presents to the MID services              |
-| rp.certificate-level                                     | QUALIFIED     | The required certificate level when authenticating through SID/MID services |
-| rp.scheme-name                                           | smart-id-demo | Name of the SID scheme used (eg. `smart-id`)                                |
-| smartid.client.hostUrl                                   |               | URL of the SID RP API                                                       |
-| session-nonce.expired.clean-up.cron                      |               | Cron expression for the session nonce clean-up job                          |
-| session-nonce.expired.clean-up.delete-limit              | 1000          | Maximum number of expired session nonces deleted per clean-up run           |
-| mobileid.client.hostUrl                                  |               | URL of the MID RP API.                                                      |
-| mobileid.client.timeoutSeconds                           | 5             | timeout for MID client requests                                             |
+| application prop                                         | default       | description                                                                         |
+|:---------------------------------------------------------|:--------------|:------------------------------------------------------------------------------------|
+| restclient.auth-server.hostUrl                           |               | URL of the cdoc2-auth-server component                                              |
+| restclient.auth-server.read-timeout                      | 5000          | read timeout for auth server requests, in millisecond                               |
+| restclient.auth-server.hosconnection-request-timeouttUrl | 5000          | connection timeout for auth server requests, in milliseconds                        |
+| well-known.ecPrivateKeyPem                               |               | PEM-encoded resource for the EC ES256 private key to use for MID countersignatures  |
+| well-known.kid                                           |               | key id of the key to use for for MID countersignatures                              |
+| well-known.jwk                                           |               | JWK resource for the public key(s) advertised by the /.well-known/jwks.jws endpoint |
+| rp.sid.name                                              |               | Relying party name that rp-server presents to the SID services                      |
+| rp.mid.name                                              |               | Relying party name that rp-server presents to the MID services                      |
+| rp.sid.uuid                                              |               | Relying party UUID that rp-server presents to the SID services                      |
+| rp.mid.uuid                                              |               | Relying party UUID that rp-server presents to the MID services                      |
+| rp.certificate-level                                     | QUALIFIED     | The required certificate level when authenticating through SID/MID services         |
+| rp.scheme-name                                           | smart-id-demo | Name of the SID scheme used (eg. `smart-id`)                                        |
+| smartid.client.hostUrl                                   |               | URL of the SID RP API                                                               |
+| session-nonce.expired.clean-up.cron                      |               | Cron expression for the session nonce clean-up job                                  |
+| session-nonce.expired.clean-up.delete-limit              | 1000          | Maximum number of expired session nonces deleted per clean-up run                   |
+| mobileid.client.hostUrl                                  |               | URL of the MID RP API.                                                              |
+| mobileid.client.timeoutSeconds                           | 5             | timeout for MID client requests                                                     |
 
 ### Spring properties
 

@@ -3,8 +3,6 @@ package ee.cyber.cdoc2.server.adapter.api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,13 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ee.cyber.cdoc2.auth.exception.VerificationException;
 import ee.cyber.cdoc2.server.adapter.clients.mobileid.MiDClient;
 import ee.cyber.cdoc2.server.adapter.clients.mobileid.MiDSessionStatusMapper;
 import ee.cyber.cdoc2.server.adapter.clients.smartid.SessionStatusMapper;
 import ee.cyber.cdoc2.server.adapter.clients.smartid.SiDClient;
+import ee.cyber.cdoc2.server.adapter.conf.WellKnownJwkConf;
 import ee.cyber.cdoc2.server.adapter.generated.api.Cdoc2RpApiDelegate;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidSessionStatusResponse;
@@ -39,14 +36,13 @@ import static ee.cyber.cdoc2.server.adapter.clients.mobileid.MidValidationUtil.v
 @Component
 @RequiredArgsConstructor
 public class RpApiImpl implements Cdoc2RpApiDelegate {
-
     private final SiDClient siDClient;
     private final MiDClient miDClient;
     private final ValidateSessionToken validateSessionToken;
     private final CounterSign counterSign;
+    private final WellKnownJwkConf wellKnownJwkConf;
 
     private final GetSessionNonce getSessionNonce;
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Override
     public ResponseEntity<NonceResponse> getSessionNonce() {
@@ -57,16 +53,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
 
     @Override
     public ResponseEntity<WellKnownResponse> getWellKnown() {
-        InputStream input = getClass()
-            .getClassLoader()
-            .getResourceAsStream("well-known-sample.json");
-
-        try {
-            WellKnownResponse response = OBJECT_MAPPER.readValue(input, WellKnownResponse.class);
-            return ResponseEntity.ok(response);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return ResponseEntity.ok(wellKnownJwkConf.getJwk());
     }
 
     @Override
