@@ -108,7 +108,7 @@ To run the build container:
 docker run --rm --network=host ghcr.io/open-eid/cdoc2-rp-server:0.6.0
 ```
 
-### Key generation for JWT (session token) signing
+### Key generation for HTTP signatures
 
 ```
 openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-256 -out ec_keypair.pem \
