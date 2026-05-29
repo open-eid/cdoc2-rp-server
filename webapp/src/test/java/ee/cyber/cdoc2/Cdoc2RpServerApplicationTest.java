@@ -7,6 +7,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -274,6 +275,18 @@ class Cdoc2RpServerApplicationTest {
 
         assertEquals(MidSessionStatusResponse.StateEnum.COMPLETE, sessionStatusResponse.getState());
         assertEquals(MidSessionStatusResponse.ResultEnum.OK, sessionStatusResponse.getResult());
+    }
+
+    @Test
+    void shouldGetInfo() throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(
+                get(URI.create("/info"))
+            ).andExpect(status().isOk())
+            .andReturn().getResponse();
+
+        Map<?, ?> info = OBJECT_MAPPER.readValue(response.getContentAsString(), Map.class);
+
+        assertFalse(info.isEmpty());
     }
 
     private void saveNonceForSessionToken() {

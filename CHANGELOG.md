@@ -5,6 +5,7 @@
 ### Improvements
 * JWK for /.well-known/jwks.jws configurable from list of PEM-encoded resources. Removed key
   defaults from main classpath, enforcing requirement for externally provided keys.
+* Added `/info` endpoint.
 
 ## [0.6.0]
 

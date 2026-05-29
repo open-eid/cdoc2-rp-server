@@ -3,6 +3,7 @@ package ee.cyber.cdoc2.server.adapter.api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -26,6 +27,7 @@ import ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.WellKnownResponse;
 import ee.cyber.cdoc2.server.app.usecase.CounterSign;
+import ee.cyber.cdoc2.server.app.usecase.GetServerInfo;
 import ee.cyber.cdoc2.server.app.usecase.GetSessionNonce;
 import ee.cyber.cdoc2.server.app.usecase.ValidateSessionToken;
 
@@ -43,6 +45,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
     private final WellKnownJwkConf wellKnownJwkConf;
 
     private final GetSessionNonce getSessionNonce;
+    private final GetServerInfo getServerInfo;
 
     @Override
     public ResponseEntity<NonceResponse> getSessionNonce() {
@@ -157,6 +160,11 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
         }
 
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> getInfo() {
+        return ResponseEntity.ok(getServerInfo.execute());
     }
 
     private ResponseEntity<MidSessionStatusResponse> counterSignedResponse(
