@@ -26,7 +26,7 @@ public class AuthServerJwkConfImpl implements AuthServerJwkConf {
             try {
                 this.publicKeys = authServerClient.getAuthServerWellKnown();
             } catch (ParseException e) {
-                throw new RuntimeException(e);
+                throw new IllegalStateException(e);
             }
         }
 

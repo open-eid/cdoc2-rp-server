@@ -13,7 +13,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
 import ee.cyber.cdoc2.server.adapter.generated.model.AuthCertificateLevel;
+
+import static ee.cyber.cdoc2.server.adapter.clients.smartid.SiDClient.SID_CLIENT_ERROR_CODE;
 
 public final class SmartIdUtilMethods {
 
@@ -26,16 +29,19 @@ public final class SmartIdUtilMethods {
         return switch (certificateLevelEnum) {
             case ADVANCED -> AuthenticationCertificateLevel.ADVANCED;
             case QUALIFIED -> AuthenticationCertificateLevel.QUALIFIED;
-            case UNKNOWN_DEFAULT_OPEN_API ->
-                throw new RuntimeException("Unsupported certificate level");
+            case UNKNOWN_DEFAULT_OPEN_API -> throw new ClientBadRequestException(
+                SID_CLIENT_ERROR_CODE,
+                "Unsupported certificate level"
+            );
         };
     }
 
     public static HashAlgorithm mapHashAlgorithm(String hashAlgorithmStr) {
         return HashAlgorithm.fromString(
             hashAlgorithmStr
-        ).orElseThrow(() -> new IllegalArgumentException("Unsupported hash algorithm: "
-            + hashAlgorithmStr
+        ).orElseThrow(() -> new ClientBadRequestException(
+            SID_CLIENT_ERROR_CODE,
+            "Unsupported hash algorithm: " + hashAlgorithmStr
         ));
     }
 
@@ -60,8 +66,10 @@ public final class SmartIdUtilMethods {
                 NotificationInteraction.confirmationMessage(interaction.displayText200());
             case "confirmationMessageAndVerificationCodeChoice" ->
                 NotificationInteraction.confirmationMessageAndVerificationCodeChoice(interaction.displayText200());
-            default ->
-                throw new IllegalArgumentException("Unsupported interaction type: " + interaction.type());
+            default -> throw new ClientBadRequestException(
+                SID_CLIENT_ERROR_CODE,
+                "Unsupported interaction type: " + interaction.type()
+            );
         };
     }
 }
