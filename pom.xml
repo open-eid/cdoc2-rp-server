@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ee.cyber.cdoc2</groupId>
     <artifactId>cdoc2-rp-server</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <packaging>pom</packaging>
     <name>cdoc2-rp-server</name>
     <description>CDOC2 RP server</description>
