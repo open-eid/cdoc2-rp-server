@@ -78,7 +78,7 @@ public class CounterSignImpl implements CounterSign {
             MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
             return digest.digest(dataToSign);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
@@ -92,7 +92,7 @@ public class CounterSignImpl implements CounterSign {
                 countersignKeyConf.ecPrivateKey()
             ));
         } catch (SignatureException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 }

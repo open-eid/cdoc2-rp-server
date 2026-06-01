@@ -46,7 +46,7 @@ public final class MiDSessionStatusMapper {
             case "PHONE_ABSENT" -> MidSessionStatusResponse.ResultEnum.PHONE_ABSENT;
             case "DELIVERY_ERROR" -> MidSessionStatusResponse.ResultEnum.DELIVERY_ERROR;
             case "SIM_ERROR" -> MidSessionStatusResponse.ResultEnum.SIM_ERROR;
-            default -> throw new RuntimeException("Unknown result code:" + result);
+            default -> throw new IllegalStateException("Unknown result code:" + result);
         };
     }
 }
