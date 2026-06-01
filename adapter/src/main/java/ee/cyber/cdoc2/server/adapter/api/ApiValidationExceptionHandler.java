@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ValidationExceptionHandler {
+public class ApiValidationExceptionHandler {
     private static final String VALIDATION_PROBLEM_TITLE = "Request validation Failed";
 
     // Handles @RequestBody validation failures

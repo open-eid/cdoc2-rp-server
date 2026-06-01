@@ -3,6 +3,7 @@ package ee.cyber.cdoc2.server.adapter.clients.mobileid;
 import ee.sk.mid.MidAuthenticationHashToSign;
 import ee.sk.mid.MidClient;
 
+import ee.sk.mid.exception.MidException;
 import ee.sk.mid.rest.dao.MidSessionStatus;
 import ee.sk.mid.rest.dao.request.MidAuthenticationRequest;
 import ee.sk.mid.rest.dao.request.MidSessionStatusRequest;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidHashType;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidLanguage;
@@ -21,6 +23,8 @@ import ee.cyber.cdoc2.server.adapter.generated.model.MidLanguage;
 @Component
 @RequiredArgsConstructor
 public class MiDClient {
+    private static final String MID_CLIENT_ERROR_CODE = "MID_CLIENT_ERROR";
+
     private final MidClient midClient;
     private final MobileIdClientConfiguration.AppProperties props;
 
@@ -40,10 +44,14 @@ public class MiDClient {
             .withDisplayText(midAuthenticateRequest.getDisplayText())
             .build();
 
-        MidAuthenticationResponse response =
-            midClient.getMobileIdConnector().authenticate(request);
+        try {
+            MidAuthenticationResponse response =
+                midClient.getMobileIdConnector().authenticate(request);
 
-        return UUID.fromString(response.getSessionID());
+            return UUID.fromString(response.getSessionID());
+        } catch (MidException e) {
+            throw new ClientBadRequestException(MID_CLIENT_ERROR_CODE, e.getMessage());
+        }
     }
 
     public MidSessionStatus sessionStatus(UUID sessionId) {
@@ -51,7 +59,12 @@ public class MiDClient {
             sessionId.toString(),
             props.timeoutSeconds()
         );
-        return midClient.getMobileIdConnector().getAuthenticationSessionStatus(request);
+
+        try {
+            return midClient.getMobileIdConnector().getAuthenticationSessionStatus(request);
+        } catch (MidException e) {
+            throw new ClientBadRequestException(MID_CLIENT_ERROR_CODE, e.getMessage());
+        }
     }
 
     private static ee.sk.mid.MidHashType mapHashType(MidHashType hashType) {
@@ -59,7 +72,10 @@ public class MiDClient {
             case SHA256 -> ee.sk.mid.MidHashType.SHA256;
             case SHA384 -> ee.sk.mid.MidHashType.SHA384;
             case SHA512 -> ee.sk.mid.MidHashType.SHA512;
-            case UNKNOWN_DEFAULT_OPEN_API -> throw new RuntimeException("Unknown hash value");
+            case UNKNOWN_DEFAULT_OPEN_API -> throw new ClientBadRequestException(
+                MID_CLIENT_ERROR_CODE,
+                "Unknown hash value"
+            );
         };
     }
 
@@ -69,7 +85,10 @@ public class MiDClient {
             case ENG -> ee.sk.mid.MidLanguage.ENG;
             case RUS -> ee.sk.mid.MidLanguage.RUS;
             case LIT -> ee.sk.mid.MidLanguage.LIT;
-            case UNKNOWN_DEFAULT_OPEN_API -> throw new RuntimeException("Unknown langue");
+            case UNKNOWN_DEFAULT_OPEN_API -> throw new ClientBadRequestException(
+                MID_CLIENT_ERROR_CODE,
+                "Unknown langue"
+            );
         };
     }
 }
