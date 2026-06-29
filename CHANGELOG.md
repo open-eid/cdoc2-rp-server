@@ -1,5 +1,11 @@
 # Changelog
 
+
+## [0.7.2]
+
+### Improvements
+* Improve unit tests code coverage
+
 ## [0.7.1]
 
 ### Improvements

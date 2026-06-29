@@ -76,6 +76,8 @@ class Cdoc2RpServerApplicationTest {
     private static final int WIREMOCK_PORT = 8090;
     private static final Instant INSTANT_NOW_SESSION_TOKEN_NOT_EXPIRED =
         Instant.parse("2026-04-22T12:30:00Z");
+    private static final Instant INSTANT_AFTER_SESSION_TOKEN_EXPIRED =
+        Instant.parse("2027-01-01T00:00:00Z");
 
     @RegisterExtension
     static WireMockExtension wiremock = WireMockExtension.newInstance()
@@ -287,6 +289,53 @@ class Cdoc2RpServerApplicationTest {
         Map<?, ?> info = OBJECT_MAPPER.readValue(response.getContentAsString(), Map.class);
 
         assertFalse(info.isEmpty());
+    }
+
+    @Test
+    void sidSessionShouldReturnUnauthorizedWhenSessionNonceMissing() throws Exception {
+        sessionNonceJpaRepository.deleteAll();
+
+        mockMvc.perform(
+                get(URI.create("/sid/session/" + UUID.randomUUID()))
+                    .headers(createHeadersForSid())
+            )
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void midSessionShouldReturnUnauthorizedWhenSessionNonceMissing() throws Exception {
+        sessionNonceJpaRepository.deleteAll();
+
+        mockMvc.perform(
+                get(URI.create("/mid/session/" + UUID.randomUUID()))
+                    .headers(createHeadersForMid())
+            )
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void sidAuthenticateShouldReturnUnauthorizedWhenSessionNonceMissing() throws Exception {
+        sessionNonceJpaRepository.deleteAll();
+        var request = createSidAuthenticateRequest();
+
+        mockMvc.perform(
+                post(URI.create("/sid/authenticate"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(OBJECT_MAPPER.writeValueAsString(request))
+                    .headers(createHeadersForSid())
+            )
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void sidSessionShouldReturnUnauthorizedWhenSessionTokenExpired() throws Exception {
+        when(clock.instant()).thenReturn(INSTANT_AFTER_SESSION_TOKEN_EXPIRED);
+
+        mockMvc.perform(
+                get(URI.create("/sid/session/" + UUID.randomUUID()))
+                    .headers(createHeadersForSid())
+            )
+            .andExpect(status().isUnauthorized());
     }
 
     private void saveNonceForSessionToken() {
