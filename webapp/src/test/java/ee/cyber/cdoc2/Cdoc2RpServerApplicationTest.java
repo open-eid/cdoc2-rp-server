@@ -328,6 +328,20 @@ class Cdoc2RpServerApplicationTest {
     }
 
     @Test
+    void midAuthenticateShouldReturnUnauthorizedWhenSessionNonceMissing() throws Exception {
+        sessionNonceJpaRepository.deleteAll();
+        var request = createMidAuthenticateRequest();
+
+        mockMvc.perform(
+                post(URI.create("/mid/authenticate"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(OBJECT_MAPPER.writeValueAsString(request))
+                    .headers(createHeadersForMid())
+            )
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void sidSessionShouldReturnUnauthorizedWhenSessionTokenExpired() throws Exception {
         when(clock.instant()).thenReturn(INSTANT_AFTER_SESSION_TOKEN_EXPIRED);
 
