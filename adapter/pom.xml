@@ -6,7 +6,7 @@
     <parent>
         <groupId>ee.cyber.cdoc2</groupId>
         <artifactId>cdoc2-rp-server</artifactId>
-        <version>0.7.1</version>
+        <version>0.7.3</version>
     </parent>
 
     <artifactId>adapter</artifactId>
@@ -16,7 +16,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <http5.client.version>5.6.1</http5.client.version>
+        <http5.client.version>5.6.2</http5.client.version>
     </properties>
 
     <dependencies>
@@ -78,14 +78,14 @@
         <dependency>
             <groupId>ee.cyber.cdoc2</groupId>
             <artifactId>app</artifactId>
-            <version>0.7.1</version>
+            <version>0.7.3</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>ee.cyber.cdoc2</groupId>
             <artifactId>cdoc2-rp-server-openapi</artifactId>
-            <version>0.7.1</version>
+            <version>0.7.3</version>
             <scope>compile</scope>
         </dependency>
 
@@ -97,17 +97,17 @@
         <dependency>
             <groupId>ee.sk.mid</groupId>
             <artifactId>mid-rest-java-client</artifactId>
-            <version>1.6</version>
+            <version>1.7</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>3.1.6</version>
+            <version>3.1.12</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
-            <version>3.1.6</version>
+            <version>3.1.12</version>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
