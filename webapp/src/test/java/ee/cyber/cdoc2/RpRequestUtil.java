@@ -84,13 +84,16 @@ public final class RpRequestUtil {
         byte[] interactionsBase64Bytes = Base64.getEncoder().encode(
             interactions.getBytes(StandardCharsets.UTF_8)
         );
+        String interactionsBase64 = Base64.getEncoder().encodeToString(
+            interactions.getBytes(StandardCharsets.UTF_8)
+        );
 
         return new SidAuthenticateRequest()
             .semanticsIdentifier(EE_SEMANTICS_IDENTIFIER_OK)
             .certificateLevel(AuthCertificateLevel.QUALIFIED)
             .signatureProtocol(AuthSignatureProtocol.ACSP_V2)
             .signatureProtocolParameters(signatureProtocolParameters)
-            .interactions(interactionsBase64Bytes)
+            .interactions(interactionsBase64)
             .vcType(VerificationCodeType.NUMERIC4);
     }
 

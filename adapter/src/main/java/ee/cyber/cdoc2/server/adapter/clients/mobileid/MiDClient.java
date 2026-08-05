@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
 
 import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidAuthenticateRequest;
+import ee.cyber.cdoc2.server.adapter.generated.model.MidDisplayTextFormat;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidHashType;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidLanguage;
-
 
 @Component
 @RequiredArgsConstructor
@@ -34,14 +34,21 @@ public class MiDClient {
     ) {
         var authHash = MidAuthenticationHashToSign.newBuilder()
             .withHash(midAuthenticateRequest.getHash())
-            .withHashType(mapHashType(midAuthenticateRequest.getHashType())).build();
+            .withHashType(
+                mapHashType(midAuthenticateRequest.getHashType())
+            ).build();
 
         MidAuthenticationRequest request = MidAuthenticationRequest.newBuilder()
             .withPhoneNumber(midAuthenticateRequest.getPhoneNumber())
             .withNationalIdentityNumber(semanticsIdentifier)
             .withHashToSign(authHash)
-            .withLanguage(mapLanguage(midAuthenticateRequest.getLanguage()))
+            .withLanguage(
+                mapLanguage(midAuthenticateRequest.getLanguage())
+            )
             .withDisplayText(midAuthenticateRequest.getDisplayText())
+            .withDisplayTextFormat(
+                mapDisplayTextFormat(midAuthenticateRequest.getDisplayTextFormat())
+            )
             .build();
 
         try {
@@ -88,6 +95,19 @@ public class MiDClient {
             case UNKNOWN_DEFAULT_OPEN_API -> throw new ClientBadRequestException(
                 MID_CLIENT_ERROR_CODE,
                 "Unknown langue"
+            );
+        };
+    }
+
+    private static ee.sk.mid.MidDisplayTextFormat mapDisplayTextFormat(
+        MidDisplayTextFormat displayTextFormat
+    ) {
+        return switch (displayTextFormat) {
+            case GSM_7 -> ee.sk.mid.MidDisplayTextFormat.GSM7;
+            case UCS_2 -> ee.sk.mid.MidDisplayTextFormat.UCS2;
+            case UNKNOWN_DEFAULT_OPEN_API -> throw new ClientBadRequestException(
+                MID_CLIENT_ERROR_CODE,
+                "Unknown displayText format"
             );
         };
     }

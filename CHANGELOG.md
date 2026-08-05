@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.3]
+
+### Fixes
+* SIDClient passes the incoming `interactions` base64-encoded object directly to SmartID servers,
+  instead of performing a deserialize-serialize step.
+* `interactions` parameter of `sid/authenticate` openapi interface changed to string
+* `mid/authenticate` passes the `displayTextFormat`parameter to MobileID servers.
 
 ## [0.7.2]
 

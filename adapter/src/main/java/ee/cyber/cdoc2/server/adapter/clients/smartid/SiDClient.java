@@ -2,29 +2,32 @@ package ee.cyber.cdoc2.server.adapter.clients.smartid;
 
 
 import ee.sk.smartid.RpChallenge;
+import ee.sk.smartid.SignatureProtocol;
 import ee.sk.smartid.SmartIdClient;
-import ee.sk.smartid.common.notification.interactions.NotificationInteraction;
+import ee.sk.smartid.VerificationCodeType;
 import ee.sk.smartid.exception.UserAccountException;
 import ee.sk.smartid.exception.UserActionException;
 import ee.sk.smartid.rest.SessionStatusPoller;
+import ee.sk.smartid.rest.SmartIdConnector;
+import ee.sk.smartid.rest.dao.AcspV2SignatureProtocolParameters;
+import ee.sk.smartid.rest.dao.NotificationAuthenticationSessionRequest;
 import ee.sk.smartid.rest.dao.SemanticsIdentifier;
 import ee.sk.smartid.rest.dao.SessionStatus;
+import ee.sk.smartid.rest.dao.SignatureAlgorithmParameters;
 import ee.sk.smartid.signature.AuthenticationSignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ee.cyber.cdoc2.server.adapter.conf.RelyingPartyConfImpl;
 import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 
-import static ee.cyber.cdoc2.server.adapter.clients.smartid.SmartIdUtilMethods.*;
+import static ee.cyber.cdoc2.server.adapter.clients.smartid.SmartIdUtilMethods.mapCertificateLevel;
+import static ee.cyber.cdoc2.server.adapter.clients.smartid.SmartIdUtilMethods.mapHashAlgorithm;
 
 @Slf4j
 @Component
@@ -50,26 +53,33 @@ public class SiDClient {
             signatureProtocolParams.getSignatureAlgorithmParameters().getHashAlgorithm().getValue()
         );
 
-        List<NotificationInteraction> interactions;
-        try {
-            interactions = decodeFromBase64(sidAuthenticateRequest.getInteractions());
-        } catch (JsonProcessingException e) {
-            log.error("Unable to decode interactions from SID authenticate request");
-            throw new ClientBadRequestException(SID_CLIENT_ERROR_CODE, e.getMessage());
-        }
+        SmartIdConnector connector = smartIdClient.getSmartIdConnector();
 
         try {
-            var authenticationSessionResponse = smartIdClient
-                .createNotificationAuthentication()
-                .withSemanticsIdentifier(new SemanticsIdentifier(semanticsIdentifier))
-                .withRpChallenge(rpChallenge.toBase64EncodedValue())
-                .withCertificateLevel(certificateLevel)
-                .withSignatureAlgorithm(signatureAlgorithm)
-                .withHashAlgorithm(hashAlgorithm)
-                .withInteractions(interactions)
-                .withRelyingPartyUUID(String.valueOf(relyingPartyConf.getSidUuid()))
-                .withRelyingPartyName(relyingPartyConf.getSidName())
-                .initAuthenticationSession();
+            var signatureProtocolParameters = new AcspV2SignatureProtocolParameters(
+                rpChallenge.toBase64EncodedValue(),
+                signatureAlgorithm.getAlgorithmName(),
+                new SignatureAlgorithmParameters(hashAlgorithm.getAlgorithmName())
+            );
+
+            NotificationAuthenticationSessionRequest request =
+                new NotificationAuthenticationSessionRequest(
+                    String.valueOf(relyingPartyConf.getSidUuid()),
+                    relyingPartyConf.getSidName(),
+                    certificateLevel.name(),
+                    SignatureProtocol.ACSP_V2.name(),
+                    signatureProtocolParameters,
+                    sidAuthenticateRequest.getInteractions(),
+                    null,
+                    null,
+                    VerificationCodeType.NUMERIC4.getValue()
+                );
+
+            var authenticationSessionResponse =
+                connector.initNotificationAuthentication(
+                    request,
+                    new SemanticsIdentifier(semanticsIdentifier)
+                );
 
             return UUID.fromString(authenticationSessionResponse.sessionID());
         } catch (UserAccountException | UserActionException e) {
