@@ -7,6 +7,7 @@ import ee.sk.smartid.SmartIdClient;
 import ee.sk.smartid.VerificationCodeType;
 import ee.sk.smartid.exception.UserAccountException;
 import ee.sk.smartid.exception.UserActionException;
+import ee.sk.smartid.exception.permanent.SmartIdClientException;
 import ee.sk.smartid.rest.SessionStatusPoller;
 import ee.sk.smartid.rest.SmartIdConnector;
 import ee.sk.smartid.rest.dao.AcspV2SignatureProtocolParameters;
@@ -82,7 +83,7 @@ public class SiDClient {
                 );
 
             return UUID.fromString(authenticationSessionResponse.sessionID());
-        } catch (UserAccountException | UserActionException e) {
+        } catch (UserAccountException | UserActionException | SmartIdClientException e) {
             throw new ClientBadRequestException(SID_CLIENT_ERROR_CODE, e.getMessage());
         }
     }

@@ -13,7 +13,6 @@ import ee.sk.smartid.rest.dao.SessionStatus;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,8 +38,6 @@ public final class RpRequestUtil {
     private RpRequestUtil() {
     }
 
-    public static final UUID DEMO_RP_UUID = UUID.fromString("00000000-0000-4000-8000-000000000000");
-    public static final String DEMO_RP_NAME = "DEMO";
     public static final String EE_SEMANTICS_IDENTIFIER_OK = "PNOEE-40504040001";
     public static final String MID_IDENTIFIER_OK = "51307149560";
     public static final String MID_PHONE_NUMBER = "+37200000000";
@@ -81,9 +78,6 @@ public final class RpRequestUtil {
                 .signatureAlgorithmParameters(signatureAlgorithmParameters);
 
         String interactions = createSidInteractions();
-        byte[] interactionsBase64Bytes = Base64.getEncoder().encode(
-            interactions.getBytes(StandardCharsets.UTF_8)
-        );
         String interactionsBase64 = Base64.getEncoder().encodeToString(
             interactions.getBytes(StandardCharsets.UTF_8)
         );
