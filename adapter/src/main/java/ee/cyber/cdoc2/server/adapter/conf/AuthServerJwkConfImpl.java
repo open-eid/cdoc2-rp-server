@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import java.text.ParseException;
 import java.util.List;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Configuration;
 
 import com.nimbusds.jose.jwk.JWK;
@@ -16,13 +15,12 @@ import ee.cyber.cdoc2.server.app.conf.AuthServerJwkConf;
 @Configuration
 @RequiredArgsConstructor
 public class AuthServerJwkConfImpl implements AuthServerJwkConf {
-    @Nullable
-    private List<JWK> publicKeys;
+    private List<JWK> publicKeys = List.of();
     private final AuthServerClient authServerClient;
 
     @Override
     public List<JWK> getPublicKeys() {
-        if (this.publicKeys == null) {
+        if (this.publicKeys.isEmpty()) {
             try {
                 this.publicKeys = authServerClient.getAuthServerWellKnown();
             } catch (ParseException e) {

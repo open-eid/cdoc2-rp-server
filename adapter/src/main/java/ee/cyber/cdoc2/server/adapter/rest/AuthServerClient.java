@@ -25,6 +25,10 @@ public class AuthServerClient {
             .retrieve()
             .body(String.class);
 
+        if (jwkJson == null) {
+            throw new ParseException("Auth server well-known keys request returned null", 0);
+        }
+
         return JWKSet.parse(jwkJson).getKeys();
     }
 }
