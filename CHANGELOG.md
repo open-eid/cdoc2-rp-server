@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.7.4]
+
+###
+
+### Improvements
+* SmartIdClientException from SK SID service is propagated to application interface as HTTP 400 
+  BAD REQUEST
+* Removed needless nullability of auth-server well-known public keys
+
 ## [0.7.3]
 
 ### Fixes
