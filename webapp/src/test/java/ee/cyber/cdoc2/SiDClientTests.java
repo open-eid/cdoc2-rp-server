@@ -36,7 +36,6 @@ public class SiDClientTests {
         var sessionId = siDClient.authenticate(EE_SEMANTICS_IDENTIFIER_OK, rpRequest);
 
         assertNotNull(sessionId);
-        System.out.println(sessionId);
 
         var sessionStatusResponse = pollForFinalSessionStatus(sessionId);
 
