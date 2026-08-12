@@ -93,7 +93,7 @@ public class SiDClient {
 
         try {
             return poller.getSessionStatus(String.valueOf(sessionId));
-        } catch (UserAccountException | UserActionException e) {
+        } catch (UserAccountException | UserActionException | SmartIdClientException e) {
             throw new ClientBadRequestException(SID_CLIENT_ERROR_CODE, e.getMessage());
         }
     }
