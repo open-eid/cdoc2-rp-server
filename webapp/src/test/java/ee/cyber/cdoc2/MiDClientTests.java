@@ -14,8 +14,8 @@ import ee.cyber.cdoc2.server.adapter.clients.mobileid.MiDClient;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidLanguage;
 
-import static ee.cyber.cdoc2.RpRequestUtil.createRpChallengeBytes;
 import static ee.cyber.cdoc2.server.adapter.generated.model.MidHashType.SHA512;
+import static ee.cyber.cdoc2.util.RpRequestUtil.createRpChallengeBytes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

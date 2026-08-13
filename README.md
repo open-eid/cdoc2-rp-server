@@ -16,6 +16,9 @@
 - `openapi`
     - Openapi definition and code generation of cdoc2-auth-server REST API
     - May not have dependencies to other modules
+- `test-common`
+    - Test utilities and constants shared between modules. Other modules may depend on 
+      `test-common` only in the `test` scope 
 - `webapp`
     - Spring boot application
     - May depend on `adapter`, `db-changelog`

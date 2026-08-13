@@ -1,4 +1,4 @@
-package ee.cyber.cdoc2;
+package ee.cyber.cdoc2.server.adapter.clients.mobileid;
 
 import ee.sk.mid.MidClient;
 import ee.sk.mid.exception.MidDeliveryException;
@@ -30,12 +30,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ee.cyber.cdoc2.server.adapter.clients.mobileid.MiDClient;
-import ee.cyber.cdoc2.server.adapter.clients.mobileid.MobileIdClientConfiguration;
 import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
 
-import static ee.cyber.cdoc2.RpRequestUtil.MID_IDENTIFIER_OK;
-import static ee.cyber.cdoc2.RpRequestUtil.createMidAuthenticateRequest;
+import static ee.cyber.cdoc2.util.RpRequestUtil.MID_IDENTIFIER_OK;
+import static ee.cyber.cdoc2.util.RpRequestUtil.createMidAuthenticateRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -95,7 +93,9 @@ public class MiDClientExceptionTests {
         return new MiDClient(mockMidClient, MID_CLIENT_PROPS);
     }
 
-    /** Stubs the connector call made by {@code authenticate()} to throw the given exception. */
+    /**
+     * Stubs the connector call made by {@code authenticate()} to throw the given exception.
+     */
     private MiDClient stubAuthenticateToThrow(RuntimeException exception) {
         when(mockMidClient.getMobileIdConnector()).thenReturn(mockMidConnector);
         when(mockMidConnector.authenticate(any(MidAuthenticationRequest.class))).thenThrow(exception);
@@ -103,7 +103,9 @@ public class MiDClientExceptionTests {
         return miDClientWithMocks();
     }
 
-    /** Stubs the connector call made by {@code sessionStatus()} to throw the given exception. */
+    /**
+     * Stubs the connector call made by {@code sessionStatus()} to throw the given exception.
+     */
     private MiDClient stubSessionStatusToThrow(RuntimeException exception) {
         when(mockMidClient.getMobileIdConnector()).thenReturn(mockMidConnector);
         when(mockMidConnector.getAuthenticationSessionStatus(any(MidSessionStatusRequest.class)))

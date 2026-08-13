@@ -1,4 +1,4 @@
-package ee.cyber.cdoc2;
+package ee.cyber.cdoc2.util;
 
 import ee.sk.mid.rest.dao.MidSessionSignature;
 import ee.sk.mid.rest.dao.MidSessionStatus;
@@ -25,13 +25,12 @@ import ee.cyber.cdoc2.server.adapter.generated.model.AuthSignatureProtocolParame
 import ee.cyber.cdoc2.server.adapter.generated.model.HashAlgorithm;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidDisplayTextFormat;
+import ee.cyber.cdoc2.server.adapter.generated.model.MidHashType;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidLanguage;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.SignatureAlgorithm;
 import ee.cyber.cdoc2.server.adapter.generated.model.SignatureAlgorithmParametersInRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.VerificationCodeType;
-
-import static ee.cyber.cdoc2.server.adapter.generated.model.MidHashType.SHA512;
 
 public final class RpRequestUtil {
 
@@ -169,7 +168,7 @@ public final class RpRequestUtil {
             .phoneNumber(MID_PHONE_NUMBER)
             .nationalIdentityNumber(MID_IDENTIFIER_OK)
             .hash(createRpChallengeBytes())
-            .hashType(SHA512)
+            .hashType(MidHashType.SHA512)
             .language(MidLanguage.ENG)
             .displayText(MID_DISPLAY_TEXT)
             .displayTextFormat(MidDisplayTextFormat.GSM_7);

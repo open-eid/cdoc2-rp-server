@@ -1,4 +1,4 @@
-package ee.cyber.cdoc2;
+package ee.cyber.cdoc2.server.adapter.clients.smartid;
 
 import ee.sk.smartid.SmartIdClient;
 import ee.sk.smartid.exception.UserAccountException;
@@ -35,11 +35,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ee.cyber.cdoc2.server.adapter.clients.smartid.SiDClient;
 import ee.cyber.cdoc2.server.adapter.conf.RelyingPartyConfImpl;
 import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
 
-import static ee.cyber.cdoc2.util.RpRequestUtil.EE_SEMANTICS_IDENTIFIER_OK;
 import static ee.cyber.cdoc2.util.RpRequestUtil.createSidAuthenticateRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,6 +47,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class SiDClientExceptionTests {
     private static final String SID_CLIENT_ERROR_CODE = "SID_CLIENT_ERROR";
+    public static final String EE_SEMANTICS_IDENTIFIER = "PNOEE-40504040001";
 
     @Mock
     private SmartIdClient mockSmartIdClient;
@@ -100,7 +99,7 @@ public class SiDClientExceptionTests {
         var client = stubAuthenticateToThrow(exception);
 
         assertWrappedAsClientBadRequestException(
-            () -> client.authenticate(EE_SEMANTICS_IDENTIFIER_OK, rpRequest), exception);
+            () -> client.authenticate("", rpRequest), exception);
     }
 
     @ParameterizedTest
@@ -112,7 +111,7 @@ public class SiDClientExceptionTests {
         var client = stubAuthenticateToThrow(exception);
 
         assertWrappedAsClientBadRequestException(
-            () -> client.authenticate(EE_SEMANTICS_IDENTIFIER_OK, rpRequest), exception);
+            () -> client.authenticate(EE_SEMANTICS_IDENTIFIER, rpRequest), exception);
     }
 
     @ParameterizedTest
@@ -124,7 +123,7 @@ public class SiDClientExceptionTests {
         var client = stubAuthenticateToThrow(exception);
 
         assertWrappedAsClientBadRequestException(
-            () -> client.authenticate(EE_SEMANTICS_IDENTIFIER_OK, rpRequest), exception);
+            () -> client.authenticate(EE_SEMANTICS_IDENTIFIER, rpRequest), exception);
     }
 
     @ParameterizedTest
