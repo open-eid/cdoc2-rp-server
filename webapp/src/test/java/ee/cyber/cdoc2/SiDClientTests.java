@@ -12,8 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ee.cyber.cdoc2.server.adapter.clients.smartid.SiDClient;
 
-import static ee.cyber.cdoc2.RpRequestUtil.EE_SEMANTICS_IDENTIFIER_OK;
-import static ee.cyber.cdoc2.RpRequestUtil.createSidAuthenticateRequest;
+import static ee.cyber.cdoc2.util.RpRequestUtil.EE_SEMANTICS_IDENTIFIER_OK;
+import static ee.cyber.cdoc2.util.RpRequestUtil.createSidAuthenticateRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -36,7 +36,6 @@ public class SiDClientTests {
         var sessionId = siDClient.authenticate(EE_SEMANTICS_IDENTIFIER_OK, rpRequest);
 
         assertNotNull(sessionId);
-        System.out.println(sessionId);
 
         var sessionStatusResponse = pollForFinalSessionStatus(sessionId);
 

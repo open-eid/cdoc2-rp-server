@@ -1,4 +1,4 @@
-package ee.cyber.cdoc2;
+package ee.cyber.cdoc2.util;
 
 import ee.sk.mid.rest.dao.MidSessionSignature;
 import ee.sk.mid.rest.dao.MidSessionStatus;
@@ -13,7 +13,6 @@ import ee.sk.smartid.rest.dao.SessionStatus;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,21 +25,18 @@ import ee.cyber.cdoc2.server.adapter.generated.model.AuthSignatureProtocolParame
 import ee.cyber.cdoc2.server.adapter.generated.model.HashAlgorithm;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidDisplayTextFormat;
+import ee.cyber.cdoc2.server.adapter.generated.model.MidHashType;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidLanguage;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.SignatureAlgorithm;
 import ee.cyber.cdoc2.server.adapter.generated.model.SignatureAlgorithmParametersInRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.VerificationCodeType;
 
-import static ee.cyber.cdoc2.server.adapter.generated.model.MidHashType.SHA512;
-
 public final class RpRequestUtil {
 
     private RpRequestUtil() {
     }
 
-    public static final UUID DEMO_RP_UUID = UUID.fromString("00000000-0000-4000-8000-000000000000");
-    public static final String DEMO_RP_NAME = "DEMO";
     public static final String EE_SEMANTICS_IDENTIFIER_OK = "PNOEE-40504040001";
     public static final String MID_IDENTIFIER_OK = "51307149560";
     public static final String MID_PHONE_NUMBER = "+37200000000";
@@ -81,9 +77,6 @@ public final class RpRequestUtil {
                 .signatureAlgorithmParameters(signatureAlgorithmParameters);
 
         String interactions = createSidInteractions();
-        byte[] interactionsBase64Bytes = Base64.getEncoder().encode(
-            interactions.getBytes(StandardCharsets.UTF_8)
-        );
         String interactionsBase64 = Base64.getEncoder().encodeToString(
             interactions.getBytes(StandardCharsets.UTF_8)
         );
@@ -175,7 +168,7 @@ public final class RpRequestUtil {
             .phoneNumber(MID_PHONE_NUMBER)
             .nationalIdentityNumber(MID_IDENTIFIER_OK)
             .hash(createRpChallengeBytes())
-            .hashType(SHA512)
+            .hashType(MidHashType.SHA512)
             .language(MidLanguage.ENG)
             .displayText(MID_DISPLAY_TEXT)
             .displayTextFormat(MidDisplayTextFormat.GSM_7);

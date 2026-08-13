@@ -121,6 +121,27 @@
             <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.23.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.23.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ee.cyber.cdoc2</groupId>
+            <artifactId>test-common</artifactId>
+            <version>0.7.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>
