@@ -179,7 +179,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.6</version>
                 <configuration>
-                    <excludedGroups>net</excludedGroups>
                     <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
                 </configuration>
             </plugin>
@@ -202,6 +201,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <excludedGroups>net</excludedGroups>
+                            <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
                         </configuration>
                     </plugin>
                 </plugins>
