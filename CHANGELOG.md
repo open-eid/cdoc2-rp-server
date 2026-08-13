@@ -1,8 +1,6 @@
 # Changelog
 
-## [0.7.4]
-
-###
+## [0.8.0]
 
 ### Improvements
 * SmartIdClientException from SK SID service is propagated to application interface as HTTP 400 
