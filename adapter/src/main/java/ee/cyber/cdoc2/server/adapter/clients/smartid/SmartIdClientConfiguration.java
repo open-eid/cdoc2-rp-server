@@ -22,7 +22,7 @@ public class SmartIdClientConfiguration {
     @ConfigurationProperties(prefix = "app.smartid.client")
     public record AppProperties(
         String hostUrl,
-        @DefaultValue(DEFAULT_TIMEOUT_SECONDS) long timeoutSeconds
+        @DefaultValue(DEFAULT_TIMEOUT_SECONDS) long statusPollTimeoutSeconds
     ) {
     }
 
@@ -34,7 +34,7 @@ public class SmartIdClientConfiguration {
         smartIdClient.setHostUrl(props.hostUrl);
         smartIdClient.setTrustStore(trustStore);
         smartIdClient.setSessionStatusResponseSocketOpenTime(
-            TimeUnit.SECONDS, props.timeoutSeconds
+            TimeUnit.SECONDS, props.statusPollTimeoutSeconds
         );
 
         return smartIdClient;
