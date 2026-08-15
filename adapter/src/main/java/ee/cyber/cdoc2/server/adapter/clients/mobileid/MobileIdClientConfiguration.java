@@ -22,7 +22,7 @@ public class MobileIdClientConfiguration {
     @ConfigurationProperties(prefix = "app.mobileid.client")
     public record AppProperties(
         String hostUrl,
-        @DefaultValue("5") int timeoutSeconds
+        @DefaultValue("1") int statusPollTimeoutSeconds
     ) {
     }
 
