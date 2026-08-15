@@ -17,13 +17,13 @@ import ee.cyber.cdoc2.auth.TokenVerificationResponse;
 import ee.cyber.cdoc2.auth.exception.VerificationException;
 import ee.cyber.cdoc2.server.app.conf.AuthCertificateConf;
 import ee.cyber.cdoc2.server.app.conf.AuthServerJwkConf;
-import ee.cyber.cdoc2.server.app.conf.SidTrustedIssuers;
+import ee.cyber.cdoc2.server.app.conf.TrustedIssuers;
 
 @Component
 @RequiredArgsConstructor
 public class ValidateSessionTokenImpl implements ValidateSessionToken {
     private final AuthServerJwkConf authServerJwkConf;
-    private final SidTrustedIssuers sidTrustedIssuers;
+    private final TrustedIssuers trustedIssuers;
     private final AuthCertificateConf authCertificateConf;
     private final FindSessionNonce findSessionNonce;
     private final Clock clock;
@@ -35,7 +35,7 @@ public class ValidateSessionTokenImpl implements ValidateSessionToken {
         List<JWK> keys = authServerJwkConf.getPublicKeys();
 
         SessionTokenVerifier sessionTokenVerifier = new SessionTokenVerifier(
-            sidTrustedIssuers.getTrustStore(),
+            trustedIssuers.getTrustStore(),
             authCertificateConf.isRevocationChecksEnabled(),
             clock
         );
