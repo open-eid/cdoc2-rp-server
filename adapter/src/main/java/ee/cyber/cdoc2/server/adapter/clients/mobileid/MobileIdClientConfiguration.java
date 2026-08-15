@@ -16,13 +16,14 @@ import ee.cyber.cdoc2.server.app.conf.RelyingPartyConf;
 @Configuration
 @RequiredArgsConstructor
 public class MobileIdClientConfiguration {
+    private static final String DEFAULT_STATUS_POLL_TIMEOUT_SECONDS = "1";
     private static final String SSL_BUNDLE_NAME = "mid-server";
     private final SslBundles sslBundles;
 
     @ConfigurationProperties(prefix = "app.mobileid.client")
     public record AppProperties(
         String hostUrl,
-        @DefaultValue("1") int statusPollTimeoutSeconds
+        @DefaultValue(DEFAULT_STATUS_POLL_TIMEOUT_SECONDS) int statusPollTimeoutSeconds
     ) {
     }
 

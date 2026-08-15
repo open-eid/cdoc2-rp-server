@@ -16,13 +16,13 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class SmartIdClientConfiguration {
     private static final String SSL_BUNDLE_NAME = "sid-server";
-    private static final String DEFAULT_TIMEOUT_SECONDS = "1";
+    private static final String DEFAULT_STATUS_POLL_TIMEOUT_SECONDS = "1";
     private final SslBundles sslBundles;
 
     @ConfigurationProperties(prefix = "app.smartid.client")
     public record AppProperties(
         String hostUrl,
-        @DefaultValue(DEFAULT_TIMEOUT_SECONDS) long statusPollTimeoutSeconds
+        @DefaultValue(DEFAULT_STATUS_POLL_TIMEOUT_SECONDS) long statusPollTimeoutSeconds
     ) {
     }
 
