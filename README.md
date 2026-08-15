@@ -6,9 +6,9 @@
     - Implementation details for data access, input and output
     - May depend on: `app`, `openapi`
 - `app`
-    - Business logic, completely agnostic towards data access implementation.
-      Internally structured according to logical application usecases. Defines interfaces
-      for any needed external data access, which are then implemented in the `adapter` module
+    - Business logic, completely agnostic towards data access implementation. Internally structured
+      according to logical application usecases. Defines interfaces for any needed external data
+      access, which are then implemented in the `adapter` module
     - May not have dependencies to other modules
 - `db-changelog`
     - Liquibase changes and related helpers
@@ -17,8 +17,8 @@
     - Openapi definition and code generation of cdoc2-auth-server REST API
     - May not have dependencies to other modules
 - `test-common`
-    - Test utilities and constants shared between modules. Other modules may depend on 
-      `test-common` only in the `test` scope 
+    - Test utilities and constants shared between modules. Other modules may depend on
+      `test-common` only in the `test` scope
 - `webapp`
     - Spring boot application
     - May depend on `adapter`, `db-changelog`
@@ -35,25 +35,26 @@
 In configuration files, the following properties must start with the `app.` prefix:
 `app.restclient.auth-server.hostUrl`
 
-| application prop                                         | default       | description                                                                                                                                                                   |
-|:---------------------------------------------------------|:--------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| restclient.auth-server.hostUrl                           |               | URL of the cdoc2-auth-server component                                                                                                                                        |
-| restclient.auth-server.read-timeout                      | 5000          | read timeout for auth server requests, in millisecond                                                                                                                         |
-| restclient.auth-server.hosconnection-request-timeouttUrl | 5000          | connection timeout for auth server requests, in milliseconds                                                                                                                  |
-| countersign.ecPrivateKeyPem                              |               | PEM-encoded resource for the EC ES256 private key to use for MID countersignatures                                                                                            |
-| well-known.publicKeys                                    |               | List of PEM-encoded resources for the public key(s) advertised by the /.well-known/jwks.jws endpoint                                                                          |
-| well-known.activePublicKey                               |               | Name of the public key that corresponds to `jwt.ecPrivateKeyPem`. <br/>Must be contained in `well-known.publicKeys` and is used to derive the `kid` value for HTTP signatures |
-| rp.sid.name                                              |               | Relying party name that rp-server presents to the SID services                                                                                                                |
-| rp.mid.name                                              |               | Relying party name that rp-server presents to the MID services                                                                                                                |
-| rp.sid.uuid                                              |               | Relying party UUID that rp-server presents to the SID services                                                                                                                |
-| rp.mid.uuid                                              |               | Relying party UUID that rp-server presents to the MID services                                                                                                                |
-| rp.certificate-level                                     | QUALIFIED     | The required certificate level when authenticating through SID/MID services                                                                                                   |
-| rp.scheme-name                                           | smart-id-demo | Name of the SID scheme used (eg. `smart-id`)                                                                                                                                  |
-| smartid.client.hostUrl                                   |               | URL of the SID RP API                                                                                                                                                         |
-| session-nonce.expired.clean-up.cron                      |               | Cron expression for the session nonce clean-up job                                                                                                                            |
-| session-nonce.expired.clean-up.delete-limit              | 1000          | Maximum number of expired session nonces deleted per clean-up run                                                                                                             |
-| mobileid.client.hostUrl                                  |               | URL of the MID RP API.                                                                                                                                                        |
-| mobileid.client.timeoutSeconds                           | 5             | timeout for MID client requests                                                                                                                                               |
+| application prop                                         | default       | description                                                                                                                                                                                        |
+|:---------------------------------------------------------|:--------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| restclient.auth-server.hostUrl                           |               | URL of the cdoc2-auth-server component                                                                                                                                                             |
+| restclient.auth-server.read-timeout                      | 5000          | read timeout for auth server requests, in millisecond                                                                                                                                              |
+| restclient.auth-server.hosconnection-request-timeouttUrl | 5000          | connection timeout for auth server requests, in milliseconds                                                                                                                                       |
+| countersign.ecPrivateKeyPem                              |               | PEM-encoded resource for the EC ES256 private key to use for MID countersignatures                                                                                                                 |
+| well-known.publicKeys                                    |               | List of PEM-encoded resources for the public key(s) advertised by the /.well-known/jwks.jws endpoint                                                                                               |
+| well-known.activePublicKey                               |               | Name of the public key that corresponds to `jwt.ecPrivateKeyPem`. <br/>Must be contained in `well-known.publicKeys` and is used to derive the `kid` value for HTTP signatures                      |
+| rp.sid.name                                              |               | Relying party name that rp-server presents to the SID services                                                                                                                                     |
+| rp.mid.name                                              |               | Relying party name that rp-server presents to the MID services                                                                                                                                     |
+| rp.sid.uuid                                              |               | Relying party UUID that rp-server presents to the SID services                                                                                                                                     |
+| rp.mid.uuid                                              |               | Relying party UUID that rp-server presents to the MID services                                                                                                                                     |
+| rp.certificate-level                                     | QUALIFIED     | The required certificate level when authenticating through SID/MID services                                                                                                                        |
+| rp.scheme-name                                           | smart-id-demo | Name of the SID scheme used (eg. `smart-id`)                                                                                                                                                       |
+| smartid.client.hostUrl                                   |               | URL of the SID RP API                                                                                                                                                                              |
+| smartid.client.statusPollTimeoutSeconds                  |               | Max time the SID API may hold a session status request open (server-side long poll) before responding with the current status, in seconds. Value of 0 means request will return only when complete |
+| session-nonce.expired.clean-up.cron                      |               | Cron expression for the session nonce clean-up job                                                                                                                                                 |
+| session-nonce.expired.clean-up.delete-limit              | 1000          | Maximum number of expired session nonces deleted per clean-up run                                                                                                                                  |
+| mobileid.client.hostUrl                                  |               | URL of the MID RP API.                                                                                                                                                                             |
+| mobileid.client.statusPollTimeoutSeconds                 | 1             | Max time the MID API may hold a session status request open (server-side long poll) before responding with the current status, in seconds. Value of 0 means request will return only when complete |
 
 ### Spring properties
 
@@ -125,7 +126,10 @@ openssl ec -in ec_keypair.pem -out ec_private.pem
 The SBOM report will be automatically generated at build time.
 
 To manually create the SBOM report, run:
+
 ```
 mvn cyclonedx:makeAggregateBom
 ```
-The generated reports (`target/bom.json` and `target/bom.xml`) include dependencies from all submodules.
+
+The generated reports (`target/bom.json` and `target/bom.xml`) include dependencies from all
+submodules.
