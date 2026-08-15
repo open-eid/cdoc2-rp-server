@@ -64,7 +64,7 @@ public class MiDClient {
     public MidSessionStatus sessionStatus(UUID sessionId) {
         MidSessionStatusRequest request = new MidSessionStatusRequest(
             sessionId.toString(),
-            props.timeoutSeconds()
+            props.statusPollTimeoutSeconds()
         );
 
         try {

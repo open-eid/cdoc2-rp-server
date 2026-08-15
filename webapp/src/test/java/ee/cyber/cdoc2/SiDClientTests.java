@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class SiDClientTests {
     private static final TimeUnit SESSION_POLL_SLEEP_TIMEUNIT = TimeUnit.SECONDS;
     private static final long SESSION_POLL_SLEEP_QUANTITY = 1L;
-    private static final int MAX_POLL_COUNT = 3;
+    private static final int MAX_POLL_COUNT = 10;
 
     private static final String EE_SEMANTICS_IDENTIFIER_USER_REFUSED = "PNOEE-30403039917";
 

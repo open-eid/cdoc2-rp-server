@@ -7,6 +7,12 @@
 * SmartIdClientException from SK SID service is propagated to application interface as HTTP 400 BAD
   REQUEST
 * Removed needless nullability of auth-server well-known public keys
+* Added client config parameters:
+  * `app.smartid.client.statusPollTimeoutSeconds`
+  * `app.mobileid.client.statusPollTimeoutSeconds`\
+    Default value `1`. It defines the max time the SID/MID API may hold a session status request open
+    (server-side long poll) before responding with the current status, in seconds. Value of 0
+    means request will return only when status is COMPLETE
 
 ## [0.7.3]
 
