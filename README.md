@@ -30,6 +30,13 @@
 - run JAR - `java -jar cdoc2-rp-server-app.jar`. Provide custom `application.properties` in same
   folder as needed
 
+## Logging configuration
+
+The logging format can be changed by providing logback configuration.
+An example OpenTelemetry-compatible Logback configuration is included in `otel-logback.xml`.
+To include the logback configuration, use the `-Dlogging.config` JVM option or configuring it 
+in the `application.properties`.
+
 ### Application properties
 
 In configuration files, the following properties must start with the `app.` prefix:
