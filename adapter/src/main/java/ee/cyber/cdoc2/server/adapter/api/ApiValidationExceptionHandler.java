@@ -26,7 +26,7 @@ public class ApiValidationExceptionHandler {
             .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
             .collect(java.util.stream.Collectors.joining(", "));
 
-        log.error("Request body validation failed: {}", detail);
+        log.warn("Request body validation failed: {}", detail);
 
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle(VALIDATION_PROBLEM_TITLE);
@@ -44,7 +44,7 @@ public class ApiValidationExceptionHandler {
             .map(cv -> cv.getPropertyPath() + ": " + cv.getMessage())
             .collect(java.util.stream.Collectors.joining(", "));
 
-        log.error("Request parameter validation failed: {}", detail);
+        log.warn("Request parameter validation failed: {}", detail);
 
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle(VALIDATION_PROBLEM_TITLE);
@@ -58,7 +58,7 @@ public class ApiValidationExceptionHandler {
     public ResponseEntity<ProblemDetail> handleNotReadable(
         HttpMessageNotReadableException ex) {
 
-        log.error("Malformed request body: {}", ex.getMostSpecificCause().getMessage());
+        log.warn("Malformed request body: {}", ex.getMostSpecificCause().getMessage());
 
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle("Malformed Request");

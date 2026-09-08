@@ -74,7 +74,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
                     sidAuthenticateRequest.getSemanticsIdentifier()
                 ));
         } catch (VerificationException e) {
-            log.error("SiD session token validation failed: {}", e.getMessage(), e);
+            log.warn("SiD session token validation failed: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
         }
 
@@ -99,7 +99,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
                 null
             ));
         } catch (VerificationException e) {
-            log.error("SiD session token validation failed: {}", e.getMessage(), e);
+            log.warn("SiD session token validation failed: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
         }
 
