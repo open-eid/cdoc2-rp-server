@@ -4,8 +4,6 @@ import ee.sk.mid.MidInputUtil;
 import ee.sk.mid.exception.MidInvalidNationalIdentityNumberException;
 import ee.sk.mid.exception.MidInvalidPhoneNumberException;
 
-import java.util.Objects;
-
 import ee.cyber.cdoc2.server.app.exception.InputValidationException;
 
 public final class MidValidationUtil {
@@ -17,8 +15,11 @@ public final class MidValidationUtil {
         String phoneNr,
         String nationalIdNumber
     ) {
+        if (phoneNr == null) {
+            throw new InputValidationException("Phone number must not be null", null);
+        }
+
         try {
-            Objects.requireNonNull(phoneNr);
             MidInputUtil.getValidatedPhoneNumber(phoneNr);
         } catch (MidInvalidPhoneNumberException e) {
             throw new InputValidationException(e.getMessage(), e);

@@ -24,8 +24,8 @@ class MidValidationUtilTest {
     }
 
     @Test
-    void nullPhoneNumberThrowsNpeNotInputValidationException() {
-        assertThrows(NullPointerException.class,
+    void nullPhoneNumberThrowsInputValidationException() {
+        assertThrows(InputValidationException.class,
             () -> MidValidationUtil.validatePhoneNumberAndNationalIdentityNumber(
                 null,
                 VALID_NATIONAL_ID
