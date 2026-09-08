@@ -43,6 +43,7 @@ public final class RpRequestUtil {
     public static final String MID_DISPLAY_TEXT = "Authenticate to decrypt CDOC2 document";
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private static final String MID_SAMPLE_SIGNATURE_VALUE =
         "IO6qDBcUtpIpcQSuTVp49TJ3jbJc+WA0z+26JSFgfW2x29y2I1dSMeHfUewAv4k55YxT1mYKw9DW9Efagp6tWg==";
 
@@ -159,7 +160,7 @@ public final class RpRequestUtil {
 
     public static byte[] createRpChallengeBytes() {
         byte[] rpChallengeBytes = new byte[RP_CHALLENGE_LENGTH];
-        new SecureRandom().nextBytes(rpChallengeBytes);
+        SECURE_RANDOM.nextBytes(rpChallengeBytes);
         return rpChallengeBytes;
     }
 

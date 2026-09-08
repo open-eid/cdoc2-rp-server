@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class GetSessionNonceImpl implements GetSessionNonce {
     private static final int SESSION_NONCE_BYTES = 16;
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private final StoreSessionNonce storeSessionNonce;
 
     @Override
@@ -29,8 +30,7 @@ public class GetSessionNonceImpl implements GetSessionNonce {
 
     private static byte[] generateSessionNonce() {
         byte[] nonce = new byte[SESSION_NONCE_BYTES];
-        SecureRandom random = new SecureRandom();
-        random.nextBytes(nonce);
+        SECURE_RANDOM.nextBytes(nonce);
         return nonce;
     }
 }

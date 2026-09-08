@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.http.HttpHeaders;
@@ -21,6 +20,7 @@ import ee.cyber.cdoc2.server.adapter.conf.WellKnownJwkConf;
 import ee.cyber.cdoc2.server.adapter.generated.api.Cdoc2RpApiDelegate;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidSessionStatusResponse;
+import ee.cyber.cdoc2.server.adapter.generated.model.MidSignature;
 import ee.cyber.cdoc2.server.adapter.generated.model.NonceResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionIDResponse;
 import ee.cyber.cdoc2.server.adapter.generated.model.SessionStatusResponse;
@@ -155,8 +155,9 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
 
         MidSessionStatusResponse response = MiDSessionStatusMapper.map(midResponse);
 
-        if (response.getSignature() != null) {
-            return counterSignedResponse(response);
+        MidSignature signature = response.getSignature();
+        if (signature != null) {
+            return counterSignedResponse(response, signature);
         }
 
         return ResponseEntity.ok(response);
@@ -168,14 +169,11 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
     }
 
     private ResponseEntity<MidSessionStatusResponse> counterSignedResponse(
-        MidSessionStatusResponse response
+        MidSessionStatusResponse response,
+        MidSignature signature
     ) {
-        Objects.requireNonNull(response.getSignature());
-
         CounterSign.Response counterSignResponse =
-            counterSign.execute(new CounterSign.Request(
-                response.getSignature().getValue()
-            ));
+            counterSign.execute(new CounterSign.Request(signature.getValue()));
 
         return ResponseEntity.status(HttpStatus.OK)
             .headers(createCounterSignatureHeaders(counterSignResponse))

@@ -1,5 +1,6 @@
 package ee.cyber.cdoc2.server.app.usecase;
 
+
 public interface CounterSign {
 
     Response execute(Request request);
