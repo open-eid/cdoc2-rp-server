@@ -4,6 +4,7 @@
 
 ### Improvements
 * added `logstash-logback-encoder` dependency to enable JSON logging
+* ensured all client, validation and unexpected server errors are logged
 
 ## [0.8.0]
 

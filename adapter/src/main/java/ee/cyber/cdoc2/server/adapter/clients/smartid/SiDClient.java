@@ -84,7 +84,7 @@ public class SiDClient {
 
             return UUID.fromString(authenticationSessionResponse.sessionID());
         } catch (UserAccountException | UserActionException | SmartIdClientException e) {
-            throw new ClientBadRequestException(SID_CLIENT_ERROR_CODE, e.getMessage());
+            throw new ClientBadRequestException(SID_CLIENT_ERROR_CODE, e.getMessage(), e);
         }
     }
 
@@ -94,7 +94,7 @@ public class SiDClient {
         try {
             return poller.getSessionStatus(String.valueOf(sessionId));
         } catch (UserAccountException | UserActionException | SmartIdClientException e) {
-            throw new ClientBadRequestException(SID_CLIENT_ERROR_CODE, e.getMessage());
+            throw new ClientBadRequestException(SID_CLIENT_ERROR_CODE, e.getMessage(), e);
         }
     }
 }

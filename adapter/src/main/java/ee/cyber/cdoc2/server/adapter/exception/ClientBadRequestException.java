@@ -4,4 +4,8 @@ public class ClientBadRequestException extends ClientException {
     public ClientBadRequestException(String code, String message) {
         super(code, message);
     }
+
+    public ClientBadRequestException(String code, String message, Throwable cause) {
+        super(code, message, cause);
+    }
 }
