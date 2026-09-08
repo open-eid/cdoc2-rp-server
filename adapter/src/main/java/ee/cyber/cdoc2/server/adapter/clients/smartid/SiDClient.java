@@ -44,6 +44,12 @@ public class SiDClient {
         SidAuthenticateRequest sidAuthenticateRequest
     ) {
         var signatureProtocolParams = sidAuthenticateRequest.getSignatureProtocolParameters();
+        var signatureAlgorithmParams = signatureProtocolParams.getSignatureAlgorithmParameters();
+        if (signatureAlgorithmParams == null) {
+            throw new ClientBadRequestException(
+                SID_CLIENT_ERROR_CODE, "signatureProtocolParameters.signatureAlgorithmParameters is required"
+            );
+        }
 
         var rpChallenge = new RpChallenge(signatureProtocolParams.getRpChallenge());
         var certificateLevel = mapCertificateLevel(sidAuthenticateRequest.getCertificateLevel());
@@ -51,7 +57,7 @@ public class SiDClient {
             signatureProtocolParams.getSignatureAlgorithm().getValue()
         );
         var hashAlgorithm = mapHashAlgorithm(
-            signatureProtocolParams.getSignatureAlgorithmParameters().getHashAlgorithm().getValue()
+            signatureAlgorithmParams.getHashAlgorithm().getValue()
         );
 
         SmartIdConnector connector = smartIdClient.getSmartIdConnector();

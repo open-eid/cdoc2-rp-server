@@ -16,8 +16,8 @@ import com.nimbusds.jose.jwk.JWK;
 import ee.cyber.cdoc2.server.adapter.resource.ResourceLoaderWrapper;
 import ee.cyber.cdoc2.server.app.conf.CountersignKeyConf;
 
-@Configuration
-public class CountersignKeyConfImpl implements CountersignKeyConf {
+@Configuration(proxyBeanMethods = false)
+public final class CountersignKeyConfImpl implements CountersignKeyConf {
     private final ResourceLoaderWrapper resourceLoader;
     private final ECKey ecPrivateKey;
     private final String kid;

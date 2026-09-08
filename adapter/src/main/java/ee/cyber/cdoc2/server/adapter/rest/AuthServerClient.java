@@ -1,5 +1,7 @@
 package ee.cyber.cdoc2.server.adapter.rest;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.text.ParseException;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class AuthServerClient {
     private static final String WELL_KNOWN_PATH = ".well-known/jwks.jws";
     private final RestClient restClient;
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public AuthServerClient(@Qualifier("authServerRestClient") RestClient restClient) {
         this.restClient = restClient;
     }
