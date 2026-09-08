@@ -1,6 +1,5 @@
 package ee.cyber.cdoc2.server.adapter.conf;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 
 import java.io.InputStream;
@@ -33,7 +32,6 @@ public final class WellKnownJwkConf {
     @Getter
     private final String activePublicKeyKid;
 
-    @SuppressFBWarnings(value = "EI_EXPOSE_REP")
     @ConfigurationProperties(prefix = "app.well-known")
     public record AppProperties(
         @Nullable List<String> publicKeys,

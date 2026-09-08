@@ -1,6 +1,5 @@
 package ee.cyber.cdoc2.server.adapter.conf;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.RequiredArgsConstructor;
 
 import java.text.ParseException;
@@ -19,7 +18,6 @@ public class AuthServerJwkConfImpl implements AuthServerJwkConf {
     private List<JWK> publicKeys = List.of();
     private final AuthServerClient authServerClient;
 
-    @SuppressFBWarnings("EI_EXPOSE_REP")
     @Override
     public List<JWK> getPublicKeys() {
         if (this.publicKeys.isEmpty()) {

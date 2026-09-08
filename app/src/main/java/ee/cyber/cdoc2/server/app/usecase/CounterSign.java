@@ -1,6 +1,5 @@
 package ee.cyber.cdoc2.server.app.usecase;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public interface CounterSign {
 
@@ -14,7 +13,6 @@ public interface CounterSign {
     ) {
     }
 
-    @SuppressFBWarnings("EI_EXPOSE_REP")
     record Request(byte[] signature) {
     }
 }
