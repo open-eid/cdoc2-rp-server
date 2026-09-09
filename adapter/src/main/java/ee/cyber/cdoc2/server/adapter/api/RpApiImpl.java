@@ -74,6 +74,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
                     sidAuthenticateRequest.getSemanticsIdentifier()
                 ));
         } catch (VerificationException e) {
+            log.warn("SiD session token validation failed: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
         }
 
@@ -98,6 +99,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
                 null
             ));
         } catch (VerificationException e) {
+            log.warn("SiD session token validation failed: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
         }
 
@@ -126,6 +128,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
                 midAuthenticateRequest.getNationalIdentityNumber()
             ));
         } catch (VerificationException e) {
+            log.warn("MiD session token validation failed: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
         }
         var sessionId = miDClient.authenticate(
@@ -149,6 +152,7 @@ public class RpApiImpl implements Cdoc2RpApiDelegate {
                 null
             ));
         } catch (VerificationException e) {
+            log.warn("MiD session token validation failed: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build();
         }
         var midResponse = miDClient.sessionStatus(sessionID);
