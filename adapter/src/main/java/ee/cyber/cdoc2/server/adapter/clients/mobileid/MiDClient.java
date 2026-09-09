@@ -57,7 +57,7 @@ public class MiDClient {
 
             return UUID.fromString(response.getSessionID());
         } catch (MidException e) {
-            throw new ClientBadRequestException(MID_CLIENT_ERROR_CODE, e.getMessage());
+            throw new ClientBadRequestException(MID_CLIENT_ERROR_CODE, e.getMessage(), e);
         }
     }
 
@@ -70,7 +70,7 @@ public class MiDClient {
         try {
             return midClient.getMobileIdConnector().getAuthenticationSessionStatus(request);
         } catch (MidException e) {
-            throw new ClientBadRequestException(MID_CLIENT_ERROR_CODE, e.getMessage());
+            throw new ClientBadRequestException(MID_CLIENT_ERROR_CODE, e.getMessage(), e);
         }
     }
 
