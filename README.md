@@ -32,10 +32,10 @@
 
 ## Logging configuration
 
-The logging format can be changed by providing logback configuration.
-An example OpenTelemetry-compatible Logback configuration is included in `otel-logback.xml`.
-To include the logback configuration, use the `-Dlogging.config` JVM option or configuring it 
-in the `application.properties`.
+The logging format can be changed by providing logback configuration. An example
+OpenTelemetry-compatible Logback configuration is included in `otel-logback.xml`. To include the
+logback configuration, use the `-Dlogging.config` JVM option or configuring it in the
+`application.properties`.
 
 ### Application properties
 
@@ -57,7 +57,7 @@ In configuration files, the following properties must start with the `app.` pref
 | rp.certificate-level                                     | QUALIFIED     | The required certificate level when authenticating through SID/MID services                                                                                                                        |
 | rp.scheme-name                                           | smart-id-demo | Name of the SID scheme used (eg. `smart-id`)                                                                                                                                                       |
 | smartid.client.hostUrl                                   |               | URL of the SID RP API                                                                                                                                                                              |
-| smartid.client.statusPollTimeoutSeconds                  |               | Max time the SID API may hold a session status request open (server-side long poll) before responding with the current status, in seconds. Value of 0 means request will return only when complete |
+| smartid.client.statusPollTimeoutSeconds                  | 1             | Max time the SID API may hold a session status request open (server-side long poll) before responding with the current status, in seconds. Value of 0 means request will return only when complete |
 | session-nonce.expired.clean-up.cron                      |               | Cron expression for the session nonce clean-up job                                                                                                                                                 |
 | session-nonce.expired.clean-up.delete-limit              | 1000          | Maximum number of expired session nonces deleted per clean-up run                                                                                                                                  |
 | mobileid.client.hostUrl                                  |               | URL of the MID RP API.                                                                                                                                                                             |
