@@ -101,8 +101,7 @@ public class SiDClient {
 
         try {
             return poller.getSessionStatus(String.valueOf(sessionId));
-        } catch (UserAccountException | UserActionException
-                 | SmartIdClientException e) {
+        } catch (UserAccountException | UserActionException | SmartIdClientException e) {
             throw new ClientBadRequestException(SID_CLIENT_ERROR_CODE, e.getMessage(), e);
         } catch (SessionNotFoundException e) {
             throw new ClientNotFoundException(SID_CLIENT_ERROR_CODE, e.getMessage());
