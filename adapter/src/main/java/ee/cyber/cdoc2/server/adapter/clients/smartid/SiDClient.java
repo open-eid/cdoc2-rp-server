@@ -5,6 +5,7 @@ import ee.sk.smartid.RpChallenge;
 import ee.sk.smartid.SignatureProtocol;
 import ee.sk.smartid.SmartIdClient;
 import ee.sk.smartid.VerificationCodeType;
+import ee.sk.smartid.exception.SessionNotFoundException;
 import ee.sk.smartid.exception.UserAccountException;
 import ee.sk.smartid.exception.UserActionException;
 import ee.sk.smartid.exception.permanent.SmartIdClientException;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import ee.cyber.cdoc2.server.adapter.conf.RelyingPartyConfImpl;
 import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
+import ee.cyber.cdoc2.server.adapter.exception.ClientNotFoundException;
 import ee.cyber.cdoc2.server.adapter.generated.model.SidAuthenticateRequest;
 
 import static ee.cyber.cdoc2.server.adapter.clients.smartid.SmartIdUtilMethods.mapCertificateLevel;
@@ -99,8 +101,11 @@ public class SiDClient {
 
         try {
             return poller.getSessionStatus(String.valueOf(sessionId));
-        } catch (UserAccountException | UserActionException | SmartIdClientException e) {
+        } catch (UserAccountException | UserActionException
+                 | SmartIdClientException e) {
             throw new ClientBadRequestException(SID_CLIENT_ERROR_CODE, e.getMessage(), e);
+        } catch (SessionNotFoundException e) {
+            throw new ClientNotFoundException(SID_CLIENT_ERROR_CODE, e.getMessage());
         }
     }
 }

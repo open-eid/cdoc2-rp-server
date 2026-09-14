@@ -1,8 +1,8 @@
 package ee.cyber.cdoc2.server.adapter.api;
 
-import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
+import ee.cyber.cdoc2.server.adapter.exception.ClientNotFoundException;
 import ee.cyber.cdoc2.server.app.exception.Cdoc2RpValidationException;
 
 @Slf4j
@@ -31,6 +32,22 @@ public class ClientExceptionHandler {
         );
 
         return ResponseEntity.badRequest().body(problem);
+    }
+
+    @ExceptionHandler(ClientNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleClientNotFoundException(
+        ClientNotFoundException exception
+    ) {
+        log.warn("Client not found error [{}]: {}", exception.getCode(), exception.getMessage());
+
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problem.setProperties(
+            Map.of(
+                "errorCode", exception.getCode()
+            )
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
     }
 
     @ExceptionHandler(Cdoc2RpValidationException.class)
