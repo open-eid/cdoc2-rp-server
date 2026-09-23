@@ -9,6 +9,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
 import ee.cyber.cdoc2.server.adapter.exception.ClientNotFoundException;
@@ -16,7 +17,7 @@ import ee.cyber.cdoc2.server.app.exception.Cdoc2RpValidationException;
 
 @Slf4j
 @RestControllerAdvice
-public class ClientExceptionHandler {
+public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ClientBadRequestException.class)
     public ResponseEntity<ProblemDetail> handleClientBadRequestException(
