@@ -9,6 +9,7 @@
 * Add Spring Security configuration (`spring-boot-starter-security`) requiring HTTP Basic
   authentication for `/actuator/prometheus`
 * `/sid/session` request for non-existent session will produce 404 NOT FOUND
+* Reduce `warn` level logging verbosity for session token verification failures
 * Dependency updates
 
 ## [0.8.0]
