@@ -4,6 +4,7 @@ import ee.sk.mid.MidAuthenticationHashToSign;
 import ee.sk.mid.MidClient;
 
 import ee.sk.mid.exception.MidException;
+import ee.sk.mid.exception.MidSessionNotFoundException;
 import ee.sk.mid.rest.dao.MidSessionStatus;
 import ee.sk.mid.rest.dao.request.MidAuthenticationRequest;
 import ee.sk.mid.rest.dao.request.MidSessionStatusRequest;
@@ -15,6 +16,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
+import ee.cyber.cdoc2.server.adapter.exception.ClientNotFoundException;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidAuthenticateRequest;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidDisplayTextFormat;
 import ee.cyber.cdoc2.server.adapter.generated.model.MidHashType;
@@ -69,6 +71,8 @@ public class MiDClient {
 
         try {
             return midClient.getMobileIdConnector().getAuthenticationSessionStatus(request);
+        } catch (MidSessionNotFoundException e) {
+            throw new ClientNotFoundException(MID_CLIENT_ERROR_CODE, e.getMessage());
         } catch (MidException e) {
             throw new ClientBadRequestException(MID_CLIENT_ERROR_CODE, e.getMessage(), e);
         }

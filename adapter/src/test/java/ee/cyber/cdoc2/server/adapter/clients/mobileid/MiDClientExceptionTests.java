@@ -23,6 +23,7 @@ import ee.sk.mid.rest.dao.request.MidSessionStatusRequest;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ee.cyber.cdoc2.server.adapter.exception.ClientBadRequestException;
+import ee.cyber.cdoc2.server.adapter.exception.ClientNotFoundException;
 
 import static ee.cyber.cdoc2.util.RpRequestUtil.MID_IDENTIFIER_OK;
 import static ee.cyber.cdoc2.util.RpRequestUtil.createMidAuthenticateRequest;
@@ -62,7 +64,6 @@ public class MiDClientExceptionTests {
             new MidNotMidClientException(),
             new MidPhoneNotAvailableException(),
             new MidServiceUnavailableException("service unavailable"),
-            new MidSessionNotFoundException(),
             new MidSessionTimeoutException(),
             new MidSslException("ssl error"),
             new MidUnauthorizedException("unauthorized"),
@@ -87,6 +88,21 @@ public class MiDClientExceptionTests {
         var client = stubSessionStatusToThrow(exception);
 
         assertWrappedAsClientBadRequestException(() -> client.sessionStatus(sessionId), exception);
+    }
+
+    @Test
+    void sessionStatusWrapsMidSessionNotFoundAsClientNotFoundException() {
+        var sessionId = UUID.randomUUID();
+        var exception = new MidSessionNotFoundException();
+        var client = stubSessionStatusToThrow(exception);
+
+        var thrown = assertThrows(
+            ClientNotFoundException.class,
+            () -> client.sessionStatus(sessionId)
+        );
+
+        assertEquals(MID_CLIENT_ERROR_CODE, thrown.getCode());
+        assertEquals(exception.getMessage(), thrown.getMessage());
     }
 
     private MiDClient miDClientWithMocks() {
