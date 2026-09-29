@@ -12,7 +12,7 @@ management.endpoints.web.discovery.enabled=false
 # explicitly enable endpoints
 management.endpoint.info.enabled=true
 management.endpoint.health.enabled=true
-management.endpoint.health.show-details=when-authorized
+management.endpoint.health.show-details=always
 management.endpoint.startup.enabled=true
 management.endpoint.prometheus.enabled=true
 
@@ -41,26 +41,26 @@ spring.datasource.driver-class-name=org.postgresql.Driver
 
 app.smartid.client.hostUrl=https://sid.demo.sk.ee/smart-id-rp/v3/
 app.smartid.client.statusPollTimeoutSeconds=1
-spring.ssl.bundle.jks.sid-server.truststore.location=classpath:demo_server_trusted_ssl_certs.jks
+spring.ssl.bundle.jks.sid-server.truststore.location=webapp/config/demo_server_trusted_ssl_certs.jks
 spring.ssl.bundle.jks.sid-server.truststore.password=changeit
 spring.ssl.bundle.jks.sid-server.truststore.type=jks
 
-spring.ssl.bundle.jks.trusted-issuers.truststore.location=classpath:test_trusted_issuers.jks
+spring.ssl.bundle.jks.trusted-issuers.truststore.location=webapp/config/test_trusted_issuers.jks
 spring.ssl.bundle.jks.trusted-issuers.truststore.password=changeit
 spring.ssl.bundle.jks.trusted-issuers.truststore.type=jks
 
-spring.ssl.bundle.jks.trusted-infra.truststore.location=classpath:cdoc2_infra_truststore.jks
+spring.ssl.bundle.jks.trusted-infra.truststore.location=webapp/config/cdoc2_infra_truststore.jks
 spring.ssl.bundle.jks.trusted-infra.truststore.password=changeit
 spring.ssl.bundle.jks.trusted-infra.truststore.type=jks
 
-spring.ssl.bundle.jks.server-bundle.keystore.location=classpath:rp_server_localhost_keystore.p12
+spring.ssl.bundle.jks.server-bundle.keystore.location=webapp/config/rp_server_localhost_keystore.p12
 spring.ssl.bundle.jks.server-bundle.keystore.password=changeit
 spring.ssl.bundle.jks.server-bundle.keystore.type=pkcs12
 spring.ssl.bundle.jks.server-bundle.key.alias=rpServerLocalhostKey
 
 app.mobileid.client.hostUrl=https://tsp.demo.sk.ee/mid-api
 app.mobileid.client.statusPollTimeoutSeconds=1
-spring.ssl.bundle.jks.mid-server.truststore.location=classpath:demo_server_trusted_ssl_certs.jks
+spring.ssl.bundle.jks.mid-server.truststore.location=webapp/config/demo_server_trusted_ssl_certs.jks
 spring.ssl.bundle.jks.mid-server.truststore.password=changeit
 spring.ssl.bundle.jks.mid-server.truststore.type=jks
 
@@ -73,6 +73,10 @@ app.rp.scheme-name=smart-id-demo
 
 app.restclient.auth-server.hostUrl=https://localhost:7500
 
+app.countersign.ecPrivateKeyPem=webapp/config/rp-server-ec-key-2026-private.pem
+app.well-known.publicKeys=webapp/config/ec-key-2025.pem,webapp/config/rp-server-ec-key-2026.pem
+app.well-known.activePublicKey=webapp/config/rp-server-ec-key-2026.pem
+
 # Expired session nonce removing job executes every 5 minutes every day
 session-nonce.expired.clean-up.cron=0 0/5 * * * ?
 session-nonce.expired.clean-up.delete-limit=1000
@@ -81,5 +85,5 @@ session-nonce.expired.clean-up.delete-limit=1000
 # management.otlp.tracing.endpoint=http://localhost:4318/v1/traces
 
 # credentials for /actuator/prometheus api basic authentication
-#management.endpoints.metrics.username=username
-#management.endpoints.metrics.password=password
+management.endpoints.metrics.username=username
+management.endpoints.metrics.password=password
