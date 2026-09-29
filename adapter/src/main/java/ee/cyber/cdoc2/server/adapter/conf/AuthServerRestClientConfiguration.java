@@ -38,7 +38,8 @@ public class AuthServerRestClientConfiguration {
     @Bean
     public RestClient authServerRestClient(
         AppProperties props,
-        SslBundles sslBundles
+        SslBundles sslBundles,
+        RestClient.Builder builder
     ) throws Exception {
         KeyStore trustStore = sslBundles.getBundle(SSL_BUNDLE_NAME).getStores().getTrustStore();
 
@@ -70,7 +71,7 @@ public class AuthServerRestClientConfiguration {
             .setConnectionManager(connectionManager)
             .build();
 
-        return RestClient.builder()
+        return builder
             .baseUrl(props.hostUrl)
             .requestFactory(new HttpComponentsClientHttpRequestFactory(httpClient))
             .build();
