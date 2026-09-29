@@ -352,6 +352,152 @@ class Cdoc2RpServerApplicationTest {
             .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    void sidAuthenticateShouldReturnBadRequestWhenSessionTokenMissing() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-cdoc2-session-x5c", SID_SIGNING_CERTIFICATE_BASE64URL);
+
+        var request = createSidAuthenticateRequest();
+
+        mockMvc.perform(
+                post(URI.create("/sid/authenticate"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(OBJECT_MAPPER.writeValueAsString(request))
+                    .headers(headers)
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void sidAuthenticateShouldReturnBadRequestWhenCertMissing() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-cdoc2-session-token", SID_SESSION_TOKEN_WITH_FILTERED_DISCLOSURES_BASE64URL);
+
+        var request = createSidAuthenticateRequest();
+
+        mockMvc.perform(
+                post(URI.create("/sid/authenticate"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(OBJECT_MAPPER.writeValueAsString(request))
+                    .headers(headers)
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void sidSessionShouldReturnBadRequestWhenSessionTokenMissing() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-cdoc2-session-x5c", SID_SIGNING_CERTIFICATE_BASE64URL);
+
+        mockMvc.perform(
+                get(URI.create("/sid/session/" + UUID.randomUUID()))
+                    .headers(headers)
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void sidSessionShouldReturnBadRequestWhenCertMissing() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-cdoc2-session-token", SID_SESSION_TOKEN_WITH_FILTERED_DISCLOSURES_BASE64URL);
+
+        mockMvc.perform(
+                get(URI.create("/sid/session/" + UUID.randomUUID()))
+                    .headers(headers)
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void sidSessionShouldReturnBadRequestWhenUuidMalformed() throws Exception {
+        mockMvc.perform(
+                get(URI.create("/sid/session/" + "INVALID_UUID"))
+                    .headers(createHeadersForSid())
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void sidSessionShouldReturnNotFoundWhenUuidMissing() throws Exception {
+        mockMvc.perform(
+                get(URI.create("/sid/session/"))
+                    .headers(createHeadersForMid())
+            )
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void midAuthenticateShouldReturnBadRequestWhenSessionTokenMissing() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-cdoc2-session-x5c", MID_SIGNING_CERTIFICATE_BASE64URL);
+        var request = createMidAuthenticateRequest();
+
+        mockMvc.perform(
+                post(URI.create("/mid/authenticate"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(OBJECT_MAPPER.writeValueAsString(request))
+                    .headers(headers)
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void midAuthenticateShouldReturnBadRequestWhenCertMissing() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-cdoc2-session-token", MID_SESSION_TOKEN_WITH_FILTERED_DISCLOSURES_BASE64URL);
+        var request = createMidAuthenticateRequest();
+
+        mockMvc.perform(
+                post(URI.create("/mid/authenticate"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(OBJECT_MAPPER.writeValueAsString(request))
+                    .headers(headers)
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void midSessionShouldReturnBadRequestWhenSessionTokenMissing() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-cdoc2-session-x5c", MID_SIGNING_CERTIFICATE_BASE64URL);
+
+        mockMvc.perform(
+                get(URI.create("/mid/session/" + UUID.randomUUID()))
+                    .headers(headers)
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void midSessionShouldReturnBadRequestWhenCertMissing() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-cdoc2-session-token", MID_SESSION_TOKEN_WITH_FILTERED_DISCLOSURES_BASE64URL);
+
+        mockMvc.perform(
+                get(URI.create("/mid/session/" + UUID.randomUUID()))
+                    .headers(headers)
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void midSessionShouldReturnBadRequestWhenUuidMalformed() throws Exception {
+        mockMvc.perform(
+                get(URI.create("/mid/session/" + "INVALID_UUID"))
+                    .headers(createHeadersForMid())
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void midSessionShouldReturnNotFoundWhenUuidMissing() throws Exception {
+        mockMvc.perform(
+                get(URI.create("/mid/session/"))
+                    .headers(createHeadersForMid())
+            )
+            .andExpect(status().isNotFound());
+    }
+
     private void saveNonceForSessionToken() {
         SessionNonceEntity entity = new SessionNonceEntity();
         entity.setNonce(Base64.getUrlDecoder().decode(SESSION_NONCE_FOR_TOKEN));
