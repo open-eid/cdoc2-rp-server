@@ -23,7 +23,7 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ProblemDetail> handleClientBadRequestException(
         ClientBadRequestException exception
     ) {
-        log.warn("Client bad request [{}]: {}", exception.getCode(), exception.getMessage(), exception);
+        log.warn("Client bad request [{}]: {}", exception.getCode(), exception.getMessage());
 
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setProperties(
@@ -55,7 +55,7 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ProblemDetail> handleCdoc2RpValidationException(
         Cdoc2RpValidationException exception
     ) {
-        log.warn("Request validation failed [{}]: {}", exception.getCode(), exception.getMessage(), exception);
+        log.warn("Request validation failed [{}]: {}", exception.getCode(), exception.getMessage());
 
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setProperties(
