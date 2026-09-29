@@ -67,13 +67,4 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.badRequest().body(problem);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ProblemDetail> handleUnexpectedException(Exception exception) {
-        log.error("Unexpected error while handling request", exception);
-
-        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return ResponseEntity.internalServerError().body(problem);
-    }
 }
