@@ -146,7 +146,7 @@
                     <consoleOutput>true</consoleOutput>
 
                     <failsOnError>true</failsOnError>
-                    <failOnViolation>false</failOnViolation>
+                    <failOnViolation>true</failOnViolation>
 
                     <linkXRef>false</linkXRef>
                 </configuration>
@@ -158,6 +158,9 @@
                 <version>4.10.3.0</version>
                 <configuration>
                     <excludeFilterFile>${maven.multiModuleProjectDirectory}/spotbugs-exclude.xml</excludeFilterFile>
+                    <effort>Max</effort>
+                    <threshold>Medium</threshold>
+                    <failOnError>true</failOnError>
                 </configuration>
                 <executions>
                     <execution>

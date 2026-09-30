@@ -1,6 +1,9 @@
 package ee.cyber.cdoc2.server.adapter.conf;
 
+import java.security.KeyManagementException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.SSLContext;
 
 import org.apache.hc.client5.http.config.ConnectionConfig;
@@ -40,7 +43,7 @@ public class AuthServerRestClientConfiguration {
         AppProperties props,
         SslBundles sslBundles,
         RestClient.Builder builder
-    ) throws Exception {
+    ) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         KeyStore trustStore = sslBundles.getBundle(SSL_BUNDLE_NAME).getStores().getTrustStore();
 
         SSLContext sslContext = SSLContexts.custom()

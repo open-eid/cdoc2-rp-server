@@ -2,6 +2,7 @@ package ee.cyber.cdoc2.server.adapter.conf;
 
 import lombok.Getter;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.interfaces.ECPublicKey;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.Curve;
 import com.nimbusds.jose.jwk.ECKey;
@@ -42,7 +44,7 @@ public final class WellKnownJwkConf {
     public WellKnownJwkConf(
         AppProperties props,
         ResourceLoaderWrapper resourceLoader
-    ) throws Exception {
+    ) throws IOException, JOSEException {
         validateConf(props);
 
         this.resourceLoader = resourceLoader;
@@ -64,7 +66,7 @@ public final class WellKnownJwkConf {
         );
     }
 
-    private Map<String, JWK> toJwkMap(List<String> pemFiles) throws Exception {
+    private Map<String, JWK> toJwkMap(List<String> pemFiles) throws IOException, JOSEException {
         Map<String, JWK> jwkMap = new HashMap<>();
 
         for (String pemFile : pemFiles) {
@@ -82,12 +84,12 @@ public final class WellKnownJwkConf {
         return jwkMap;
     }
 
-    private static String deriveKid(ECPublicKey publicKey) throws Exception {
+    private static String deriveKid(ECPublicKey publicKey) throws JOSEException {
         ECKey jwk = new ECKey.Builder(Curve.P_256, publicKey).build();
         return jwk.computeThumbprint().toString();
     }
 
-    private JWK loadPublicKeyJwk(String name) throws Exception {
+    private JWK loadPublicKeyJwk(String name) throws IOException, JOSEException {
         try (InputStream is = resourceLoader.loadResource(name).getInputStream()) {
             String pem = new String(is.readAllBytes());
             return JWK.parseFromPEMEncodedObjects(pem);
